@@ -8,9 +8,11 @@ Risposte: `{ data }` per singolo, `{ data, meta }` per liste paginate (`?page=`,
 
 | metodo | route | note |
 |---|---|---|
-| POST | `/auth/login` | `{ email, password }` → `{ token, user }` |
-| POST | `/auth/logout` | revoca il token |
-| GET | `/auth/me` | utente + tenant |
+| POST | `/auth/login` | `{ email, password, device_name? }` → `{ data: { token, user } }` (user con `tenant`). Credenziali errate: 422 su `email`. Max 5 tentativi al minuto |
+| POST | `/auth/logout` | revoca il token corrente → 204 |
+| GET | `/auth/me` | `{ data: user }`, con `tenant` annidato |
+
+Il token non scade (la PWA lo tiene finché non si fa logout). Senza token valido: 401 `{ message }`.
 
 ## Tenant / impostazioni
 

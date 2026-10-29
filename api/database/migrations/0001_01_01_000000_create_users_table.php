@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 
-use App\Models\Database\v1\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create(
-            new User()->getTable(),
+            'users',
             static function (Blueprint $table): void {
                 $table->uuid('id')
                       ->primary();
@@ -79,7 +78,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists(new User()->getTable());
+        Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
