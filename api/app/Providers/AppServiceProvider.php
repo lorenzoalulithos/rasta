@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\Catalog\PainterCatalogImporter;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -14,6 +15,10 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(
+            PainterCatalogImporter::class,
+            static fn (): PainterCatalogImporter => new PainterCatalogImporter((string) config('catalog.seed_path'))
+        );
     }
 
     /**

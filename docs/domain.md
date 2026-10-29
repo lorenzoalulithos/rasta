@@ -379,7 +379,7 @@ Secondari suggeriti per imbiancatura interna: Fissativo (coverage, apply_coats f
 - Prezzo "(+ sped)" → `shipping_excluded = true`.
 - `cost_price` = colonna "Prezzo finale + IVA". Dove manca, lasciare null e segnalare.
 - Materiali senza prezzo e senza resa → importati comunque come `checklist` o `tool`, prezzo null.
-- Le 12 lavorazioni non in v1 restano nel seed con `active = false`.
+- Le 11 lavorazioni non in v1 restano nel seed con `active = false` (18 in tutto, 7 attive).
 
 ---
 
