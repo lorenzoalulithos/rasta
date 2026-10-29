@@ -91,6 +91,12 @@ Totale 974,00 €        Costo stimato 143 € · Margine 85%
 ```
 Costo e margine sono in grigio piccolo: dati interni, mai nel PDF. Il bottone a destra cambia con lo stato (vedi §2.6).
 
+Tap su costo/margine → si espande una riga di confronto (da confermare col socio, `domain.md §7.3` opzione c):
+```
+a costi netti IVA: costo 117 € · margine 88%
+```
+Solo informativa, calcolata al volo (`estimated_cost / 1,22`), stesso grigio piccolo. Nuovo tap la richiude.
+
 Desktop: righe a sinistra (60%), a destra pannello fisso con riepilogo, totali, note private, azioni.
 
 ### 2.4 Riga `/quotes/{id}/lines/{lineId}` (bottom sheet su mobile, pannello laterale su desktop)

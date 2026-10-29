@@ -51,3 +51,6 @@ logs
 .env.backup
 .env.staging
 .env.production
+
+# Playwright MCP screenshots/logs
+.playwright-mcp

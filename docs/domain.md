@@ -331,8 +331,16 @@ Con `fractional`: 2,873 × 47,69 = 137,01 €.
 **Discrepanza da chiarire col socio.** Nel suo foglio il "costo medio per 100 mq" dell'imbiancatura è 60,51 €. Rifacendo i conti torna solo con: 100 mq × 2 mani / 9,2 mq/lt = 21,7 lt = 1,55 bidoni × **39,09 € (prezzo senza IVA)** ≈ 60,7 € (vicino ai 60,51 del foglio; nessun'altra combinazione si avvicina). Cioè lui calcola il costo con confezioni frazionarie e **prezzo IVA esclusa**, ma da forfettario l'IVA la paga davvero. Due opzioni:
 - (a) teniamo `cost_price` IVA inclusa (più onesto: è quello che esce dal conto) e gli spieghiamo che i margini che vedrà sono un po' più bassi dei suoi
 - (b) aggiungiamo un flag tenant `cost_includes_vat` e lo lasciamo scegliere
+- (c) come (a), più una cifra **solo di confronto** "a costi netti IVA" in UI
 
-Proposta: (a) in v1, e il seed importa `cost_price` dalla colonna "Prezzo finale + IVA". Da confermare con lui.
+Proposta: **(c)** in v1, e il seed importa `cost_price` dalla colonna "Prezzo finale + IVA". Da confermare con lui.
+
+Regole di (c):
+- Calcolo, snapshot, magazzino e margine principale usano **solo** `cost_price` IVA inclusa. Nessun campo nuovo nel DB, nessun flag tenant.
+- In UI, toccando costo/margine del preventivo, compare una riga secondaria: `a costi netti IVA: costo X € · margine Y%`, con `X = estimated_cost / 1,22`. Calcolata al volo lato client, mai salvata, mai nel PDF, mai nella dashboard.
+- Serve solo a confrontare i numeri col foglio del socio. Approssimata: assume IVA 22% su tutti i materiali.
+
+Esempio Belissi: costo 143,07 € → netto 117,27 €; margine preventivo 85,3% → netto 88,0%.
 
 ### 7.4 Ore stimate (opzionale v1)
 Se `estimated_hours_per_unit` è valorizzato: `hours = quantity * estimated_hours_per_unit`. Somma a livello preventivo, mostrata solo in UI, mai in PDF. Per le righe in `hour`, ore = quantità.
@@ -389,7 +397,7 @@ Secondari suggeriti per imbiancatura interna: Fissativo (coverage, apply_coats f
 
 ## 10. Aperti
 
-- [ ] Confermare col socio il punto 7.3 (costo IVA inclusa vs esclusa)
+- [ ] Confermare col socio il punto 7.3: proposta (c), costo IVA inclusa + cifra di confronto netta IVA
 - [ ] Confermare i 6 prezzi delle lavorazioni v1 e i materiali primari
 - [x] Rasatura: due lavorazioni (gesso / fibrato), come nel seed
 - [ ] Righe complete del preventivo Belissi (totale 974,00 €: 724,00 € di imbiancatura + 250,00 € da definire) per il test di A2.3
