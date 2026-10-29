@@ -1,0 +1,260 @@
+[
+  {
+    "job": "Imbiancatura interna",
+    "materials": [
+      {
+        "material": "Tempera Wallcream",
+        "role": "primary",
+        "consumption_mode": "coverage",
+        "apply_coats": true,
+        "selected_by_default": true
+      },
+      {
+        "material": "Fissativo Idrofis 14lt",
+        "role": "secondary",
+        "consumption_mode": "coverage",
+        "apply_coats": false,
+        "selected_by_default": false
+      },
+      {
+        "material": "St. Gesso Tamstucco 5kg",
+        "role": "secondary",
+        "consumption_mode": "per_unit",
+        "consumption_per_unit": 0.05,
+        "apply_coats": false,
+        "selected_by_default": false,
+        "note": "0,05 kg/mq è una stima: da confermare"
+      },
+      {
+        "material": "Rullo Omega S.5100 23cm",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Rullini 10cm",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Plafoncino Set. Mista 3x10cm",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Nastro Carta 3,8x50",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Nylon 4x4m gr.360",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Nylon 4x25m",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Teli in Feltro per Pavimenti 1x10m",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Paperella 30cm",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Vaschette stucco",
+        "role": "checklist",
+        "consumption_mode": "none"
+      }
+    ]
+  },
+  {
+    "job": "Imbiancatura esterna / Lavabile",
+    "materials": [
+      {
+        "material": "Lav. Quarzo Antialg Paintop 15lt",
+        "role": "primary",
+        "consumption_mode": "coverage",
+        "apply_coats": true,
+        "selected_by_default": true
+      },
+      {
+        "material": "Fissativo Idrofis 14lt",
+        "role": "secondary",
+        "consumption_mode": "coverage",
+        "apply_coats": false,
+        "selected_by_default": false
+      },
+      {
+        "material": "Rullo Omega S.5100 23cm",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Nastro Carta 3,8x50",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Nylon 4x25m",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Quick Nylon 2,10x20m",
+        "role": "checklist",
+        "consumption_mode": "none"
+      }
+    ]
+  },
+  {
+    "job": "Ringhiere (smalto)",
+    "materials": [
+      {
+        "material": "Sm. Antirug. opaco UltraGlobal 2,5lt",
+        "role": "primary",
+        "consumption_mode": "coverage",
+        "apply_coats": true,
+        "selected_by_default": true
+      },
+      {
+        "material": "Diluente Sintetico 1lt",
+        "role": "secondary",
+        "consumption_mode": "per_unit",
+        "consumption_per_unit": 0.02,
+        "apply_coats": false,
+        "selected_by_default": false,
+        "note": "stima"
+      },
+      {
+        "material": "Cartavetro Rotolo 5mt G.100",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Pennello Radiatore 40mm",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Nylon 4x4m gr.360",
+        "role": "checklist",
+        "consumption_mode": "none"
+      }
+    ]
+  },
+  {
+    "job": "Rasature Con Stucco fibrato",
+    "materials": [
+      {
+        "material": "St. Rasante Fibrato Xter Baixens 20kg",
+        "role": "primary",
+        "consumption_mode": "coverage",
+        "apply_coats": false,
+        "selected_by_default": true
+      },
+      {
+        "material": "KitSpatole (teorico)",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Fratazzo 280x120mm(Edilzone)",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Vaschette stucco",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Cartavetro Rotolo 5mt G.180",
+        "role": "checklist",
+        "consumption_mode": "none"
+      }
+    ]
+  },
+  {
+    "job": "Rasatura Con Stucco Gesso",
+    "materials": [
+      {
+        "material": "St. Gesso Tamstucco 5kg",
+        "role": "primary",
+        "consumption_mode": "coverage",
+        "apply_coats": false,
+        "selected_by_default": true
+      },
+      {
+        "material": "KitSpatole (teorico)",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Vaschette stucco",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Cartavetro Rotolo 5mt G.180",
+        "role": "checklist",
+        "consumption_mode": "none"
+      }
+    ]
+  },
+  {
+    "job": "Legno - impregnante",
+    "materials": [
+      {
+        "material": "Imp. Borma Wachs 2,5lt",
+        "role": "primary",
+        "consumption_mode": "coverage",
+        "apply_coats": true,
+        "selected_by_default": true
+      },
+      {
+        "material": "Cartavetro Rotolo 5mt G.80",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Pennello Radiatore 50mm",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Guanti Opty Fit Master tg.10",
+        "role": "checklist",
+        "consumption_mode": "none"
+      }
+    ]
+  },
+  {
+    "job": "Stuccature",
+    "materials": [
+      {
+        "material": "St. Gesso Tamstucco 5kg",
+        "role": "secondary",
+        "consumption_mode": "per_unit",
+        "consumption_per_unit": 0.5,
+        "apply_coats": false,
+        "selected_by_default": false,
+        "note": "0,5 kg/ora, stima"
+      },
+      {
+        "material": "KitSpatole (teorico)",
+        "role": "checklist",
+        "consumption_mode": "none"
+      },
+      {
+        "material": "Vaschette stucco",
+        "role": "checklist",
+        "consumption_mode": "none"
+      }
+    ]
+  }
+]
