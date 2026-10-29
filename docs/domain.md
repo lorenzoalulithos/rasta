@@ -57,6 +57,7 @@ Dati dell'intestazione documenti e impostazioni di calcolo.
 | default_vat_rate | decimal | default 0 se forfettario, 22 se ordinario |
 | quote_validity_days | int | default 90 |
 | quote_footer_text | text | nota fiscale stampata in fondo al PDF (es. testo art.1 c.54-89 L.190/2014 + bollo) |
+| default_payment_terms | string, null | "Rimessa diretta". Copiato su `Quote.payment_terms` alla creazione |
 | coverage_strategy | enum: `min`, `avg`, `max` | come usare la resa nel calcolo. Default `avg` |
 | opened_package_ratio | decimal | quanto vale una confezione aperta ai fini del disponibile. Default 0.5 |
 | package_rounding | enum: `up`, `fractional` | arrotondamento confezioni nel fabbisogno. Default `up` |
@@ -156,7 +157,7 @@ Relazione molti-a-molti con regola di consumo. **È una proposta**: nel preventi
 | expires_at | date | `issued_at + tenant.quote_validity_days` |
 | status | enum: `draft`, `sent`, `accepted`, `rejected`, `completed` | vedi §6 |
 | vat_rate | decimal | copiato dal tenant alla creazione, modificabile |
-| payment_terms | string, null | "Rimessa diretta" |
+| payment_terms | string, null | "Rimessa diretta", copiato da `tenant.default_payment_terms` |
 | footer_text | text | copiato dal tenant alla creazione |
 | private_notes | text, null | mai stampate |
 | subtotal | decimal | somma righe, calcolato |
@@ -184,11 +185,15 @@ Chiave unica: (`tenant_id`, `year`, `number`).
 Non esiste campo sconto: l'utente modifica quantità o prezzo.
 
 ### 3.10 QuoteLineMaterial (Materiale scelto sulla riga)
-I materiali effettivamente selezionati per quella riga, con il fabbisogno calcolato. Snapshot: se cambia il catalogo, il preventivo non cambia.
+I materiali effettivamente selezionati per quella riga, con il fabbisogno calcolato. Snapshot: se cambia il catalogo, il preventivo non cambia. Anche la regola di consumo (`role`, `consumption_mode`, `consumption_per_unit`, `apply_coats`) è salvata qui, perché un materiale aggiunto a mano non ha un `JobMaterial`. Il "ricalcola" (§5.7) riallinea regola e costi al catalogo dove il `JobMaterial` esiste ancora; gli altri tengono la loro regola e prendono solo il `cost_price` attuale.
 
 | campo | tipo | note |
 |---|---|---|
 | id, quote_line_id, material_id | | |
+| role | enum: `primary`, `secondary` | copiato dal `JobMaterial`; `secondary` per i materiali aggiunti a mano ("+ Altro materiale") |
+| consumption_mode | enum: `coverage`, `per_unit` | regola di consumo usata, copiata dal `JobMaterial` o scelta con "+ Altro materiale" (§7) |
+| consumption_per_unit | decimal(10,3), null | solo con `per_unit` |
+| apply_coats | bool | se il consumo si moltiplica per le mani |
 | selected | bool | spuntato dall'utente |
 | coverage_used | decimal, null | resa usata nel calcolo |
 | required_quantity | decimal | quantità teorica in `base_unit` (es. 40.2 lt) |
@@ -259,7 +264,7 @@ Purchase 1─n PurchaseLine n─1 Material
 
 ## 5. Regole di business
 
-1. **Numerazione preventivi**: progressivo per `tenant` e `year`, assegnato al primo salvataggio (anche in bozza). Non si riusa un numero di un preventivo cancellato. Formato stampato: `n. 1 del 10/01/2026`.
+1. **Numerazione preventivi**: progressivo per `tenant` e `year`, assegnato al primo salvataggio (anche in bozza). Non si riusa un numero di un preventivo cancellato: il numero viene da un contatore per (`tenant`, `year`) incrementato in transazione con lock, che non torna mai indietro, nemmeno se si cancella l'ultimo preventivo (implementazione in A2.2). Formato stampato: `n. 1 del 10/01/2026`.
 2. **Scadenza**: `expires_at = issued_at + quote_validity_days`. Stampata in calce come "Il presente documento scadrà il …".
 3. **IVA**: `vat_rate` per documento, default dal tenant. Forfettario → 0 e `footer_text` con la dicitura di legge. Il campo esiste e funziona anche per regime ordinario.
 4. **Prezzo di costo = IVA inclusa**, sempre. Il tenant forfettario non detrae l'IVA; per un futuro tenant ordinario si valuterà un flag.

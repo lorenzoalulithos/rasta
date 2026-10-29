@@ -2,6 +2,8 @@
 
 namespace Database\Factories\Models\Database\v1;
 
+use App\Enums\ConsumptionMode;
+use App\Enums\JobMaterialRole;
 use App\Models\Database\v1\Material;
 use App\Models\Database\v1\QuoteLine;
 use App\Models\Database\v1\QuoteLineMaterial;
@@ -22,6 +24,9 @@ final class QuoteLineMaterialFactory extends Factory
             'tenant_id' => Tenant::factory(),
             'quote_line_id' => static fn (array $attributes) => QuoteLine::factory()->state(['tenant_id' => $attributes['tenant_id']]),
             'material_id' => static fn (array $attributes) => Material::factory()->state(['tenant_id' => $attributes['tenant_id']]),
+            'role' => JobMaterialRole::Primary,
+            'consumption_mode' => ConsumptionMode::Coverage,
+            'apply_coats' => true,
             'selected' => true,
             'coverage_used' => '9.00',
             'required_quantity' => '40.222',

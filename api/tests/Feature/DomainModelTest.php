@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use App\Enums\BaseUnit;
+use App\Enums\ConsumptionMode;
 use App\Enums\CoverageStrategy;
 use App\Enums\JobMaterialRole;
 use App\Enums\JobUnit;
@@ -83,6 +84,8 @@ it('links the Belissi quote from tenant down to the line materials', function ()
         ->and($quote->status)->toBe(QuoteStatus::Draft)
         ->and($quote->lines->firstOrFail()->unit)->toBe(JobUnit::SquareMeter)
         ->and($quote->lines->firstOrFail()->amount)->toBe('724.00')
+        ->and($lineMaterial->consumption_mode)->toBe(ConsumptionMode::Coverage)
+        ->and($lineMaterial->apply_coats)->toBeTrue()
         ->and($lineMaterial->required_quantity)->toBe('40.222')
         ->and($lineMaterial->required_packages)->toBe('3.000')
         ->and($lineMaterial->estimated_cost)->toBe('143.07')

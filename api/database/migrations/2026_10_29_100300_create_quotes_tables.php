@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+use App\Enums\ConsumptionMode;
+use App\Enums\JobMaterialRole;
 use App\Enums\QuoteStatus;
 use Database\Constants\MigrationConstants;
 use Illuminate\Database\Migrations\Migration;
@@ -136,6 +138,19 @@ return new class extends Migration {
                 $table->foreignUuid('material_id')
                       ->constrained()
                       ->restrictOnDelete();
+
+                // Consumption rule snapshot: hand-added materials have no JobMaterial (domain.md §3.10)
+                $table->string('role', MigrationConstants::SHORT_STRING_MAX_LENGTH)
+                      ->default(JobMaterialRole::Secondary->value);
+
+                $table->string('consumption_mode', MigrationConstants::SHORT_STRING_MAX_LENGTH)
+                      ->default(ConsumptionMode::Coverage->value);
+
+                $table->decimal('consumption_per_unit', MigrationConstants::DECIMAL_PRECISION, MigrationConstants::QUANTITY_SCALE)
+                      ->nullable();
+
+                $table->boolean('apply_coats')
+                      ->default(false);
 
                 $table->boolean('selected')
                       ->default(true);

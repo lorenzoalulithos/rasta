@@ -64,6 +64,9 @@ return new class extends Migration {
                 $table->text('quote_footer_text')
                       ->nullable();
 
+                $table->string('default_payment_terms')
+                      ->nullable();
+
                 $table->string('coverage_strategy', MigrationConstants::VERY_SHORT_STRING_MAX_LENGTH)
                       ->default(CoverageStrategy::Avg->value);
 

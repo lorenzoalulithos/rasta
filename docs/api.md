@@ -60,7 +60,7 @@ Risposte: `{ data }` per singolo, `{ data, meta }` per liste paginate (`?page=`,
 | PATCH | `/quotes/{id}` | `private_notes`, `payment_terms`, `vat_rate`, `issued_at`. Solo in `draft`/`sent` (tranne `private_notes`, sempre) |
 | DELETE | `/quotes/{id}` | solo `draft` |
 | POST | `/quotes/{id}/duplicate` | nuovo `draft`, nuovo numero, stesse righe e materiali (ricalcolati con il catalogo attuale) |
-| POST | `/quotes/{id}/lines` | `{ job_id?, description?, quantity, coats?, unit_price?, materials?: [{ material_id, selected }] }`. Se `job_id`: precompila da `Job` e crea i `QuoteLineMaterial` dai suggeriti. Risponde con la riga calcolata |
+| POST | `/quotes/{id}/lines` | `{ job_id?, description?, quantity, coats?, unit_price?, materials?: [{ material_id, selected, consumption_mode?, consumption_per_unit?, apply_coats? }] }`. Se `job_id`: precompila da `Job` e crea i `QuoteLineMaterial` dai suggeriti. Per un materiale non suggerito dalla lavorazione ("+ Altro materiale") la regola si passa nell'elemento: default `coverage` se il materiale ha resa, altrimenti `consumption_per_unit` è obbligatorio. Risponde con la riga calcolata |
 | PATCH | `/quotes/{id}/lines/{lineId}` | stessi campi; ricalcola |
 | DELETE | `/quotes/{id}/lines/{lineId}` | |
 | POST | `/quotes/{id}/lines/reorder` | `{ ids: [] }` |
@@ -108,6 +108,9 @@ Le righe libere (`job_id` null) non hanno materiali e non entrano nel costo stim
       "material_id": "…",
       "material": { "name": "Tempera Wallcream", "package_label": "bidone 14 lt", "base_unit": "lt" },
       "role": "primary",
+      "consumption_mode": "coverage",
+      "consumption_per_unit": null,
+      "apply_coats": true,
       "selected": true,
       "coverage_used": 9,
       "required_quantity": 40.222,

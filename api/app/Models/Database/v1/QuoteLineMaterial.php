@@ -2,6 +2,8 @@
 
 namespace App\Models\Database\v1;
 
+use App\Enums\ConsumptionMode;
+use App\Enums\JobMaterialRole;
 use App\Models\Concerns\BelongsToTenant;
 use Database\Factories\Models\Database\v1\QuoteLineMaterialFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
@@ -28,6 +30,10 @@ final class QuoteLineMaterial extends Model
         'tenant_id',
         'quote_line_id',
         'material_id',
+        'role',
+        'consumption_mode',
+        'consumption_per_unit',
+        'apply_coats',
         'selected',
         'coverage_used',
         'required_quantity',
@@ -58,6 +64,10 @@ final class QuoteLineMaterial extends Model
     protected function casts(): array
     {
         return [
+            'role' => JobMaterialRole::class,
+            'consumption_mode' => ConsumptionMode::class,
+            'consumption_per_unit' => 'decimal:3',
+            'apply_coats' => 'boolean',
             'selected' => 'boolean',
             'coverage_used' => 'decimal:2',
             'required_quantity' => 'decimal:3',

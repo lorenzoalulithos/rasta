@@ -41,6 +41,7 @@ final class Tenant extends Model
         'default_vat_rate',
         'quote_validity_days',
         'quote_footer_text',
+        'default_payment_terms',
         'coverage_strategy',
         'opened_package_ratio',
         'package_rounding',
