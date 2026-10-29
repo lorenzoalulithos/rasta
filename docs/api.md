@@ -44,13 +44,13 @@ Il token non scade (la PWA lo tiene finché non si fa logout). Senza token valid
 | POST | `/jobs` | accetta anche `materials[]` inline |
 | GET | `/jobs/{id}` | |
 | PATCH | `/jobs/{id}` | `materials[]` se presente sostituisce l'intera lista |
-| DELETE | `/jobs/{id}` | soft: `active = false` se usata in preventivi, hard altrimenti |
-| POST | `/jobs/reorder` | `{ ids: [] }` |
+| DELETE | `/jobs/{id}` | soft: `active = false` se usata in preventivi (200 con la lavorazione), hard altrimenti (204) |
+| POST | `/jobs/reorder` | `{ ids: [] }`: le lavorazioni prendono l'ordine dell'array → 204 |
 | GET | `/materials` | `?search=&category=&kind=`; include `stock` (on_hand, committed, available) |
 | POST | `/materials` | crea anche lo `Stock` a zero |
 | GET | `/materials/{id}` | include `stock`, `commitments[]` (quote, packages), `movements[]` (ultimi 10) |
 | PATCH | `/materials/{id}` | |
-| DELETE | `/materials/{id}` | 409 se usato in preventivi non chiusi |
+| DELETE | `/materials/{id}` | 409 se usato in preventivi non chiusi. Per ora 409 anche se è solo in preventivi chiusi: lo snapshot della riga punta al materiale (vedi `domain.md §10`) |
 
 ## Preventivi
 

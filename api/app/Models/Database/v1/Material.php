@@ -5,9 +5,11 @@ namespace App\Models\Database\v1;
 use App\Enums\BaseUnit;
 use App\Enums\MaterialCategory;
 use App\Enums\MaterialKind;
+use App\Enums\QuoteStatus;
 use App\Models\Concerns\BelongsToTenant;
 use Database\Factories\Models\Database\v1\MaterialFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -77,6 +79,32 @@ final class Material extends Model
     public function stockMovements(): HasMany
     {
         return $this->hasMany(StockMovement::class);
+    }
+
+    /**
+     * Selected line materials of accepted quotes: what commits the stock (domain.md §5.9).
+     *
+     * @return HasMany<QuoteLineMaterial, $this>
+     */
+    public function commitments(): HasMany
+    {
+        return $this->quoteLineMaterials()
+                    ->where('selected', true)
+                    ->whereHas('line.quote', static function (Builder $query): void {
+                        $query->where('status', QuoteStatus::Accepted);
+                    });
+    }
+
+    /**
+     * Adds `committed_packages`: the sum of required packages of the commitments.
+     *
+     * @param Builder<Material> $query
+     *
+     * @return void
+     */
+    public function scopeWithCommittedPackages(Builder $query): void
+    {
+        $query->withSum('commitments as committed_packages', 'required_packages');
     }
 
     /**

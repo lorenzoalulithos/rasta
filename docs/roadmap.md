@@ -15,7 +15,7 @@ Prefisso: **A** = api, **F** = app (frontend), **M** = manuale (Lollo).
 - [x] **A1.2** Auth Sanctum: login/logout/me, global scope `BelongsToTenant`, command `app:create-tenant` che crea tenant + utente. Fatto quando: feature test login → me → logout.
 - [x] **A1.3** Seeder `PainterCatalogSeeder` da `docs/seed/*.json` + endpoint `POST /tenant/seed-catalog`. Fatto quando: dopo il seed, `GET /jobs` restituisce 7 lavorazioni attive con i materiali suggeriti e `GET /materials` 72 materiali con stock a zero.
 - [x] **A1.4** CRUD clienti e cantieri, tenant GET/PATCH. Resource, Form Request, test.
-- [ ] **A1.5** CRUD lavorazioni (con `materials[]` inline e reorder) e materiali (con creazione Stock).
+- [x] **A1.5** CRUD lavorazioni (con `materials[]` inline e reorder) e materiali (con creazione Stock).
 
 ## Fase 2 – Calcolatore e preventivi
 
