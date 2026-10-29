@@ -1,0 +1,53 @@
+/.phpunit.cache
+/node_modules
+/public/build
+/public/hot
+/public/css
+/public/fonts
+/public/images
+/public/js
+/public/mix-manifest.json
+/public/storage
+/public/coverage
+/storage/*.key
+/vendor
+.phpstorm.meta.php
+.phpunit.result.cache
+docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+.php-cs-fixer.cache
+.phpcs-cache
+_ide_helper.php
+_ide_helper_models.php
+
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+.env.backup
+.env.staging
+.env.production

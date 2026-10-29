@@ -1,0 +1,29 @@
+{
+    "name": "laravel-and-nuxt-template",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "serve": "cross-env PORT=3000 HOST=127.0.0.1 node .output/server/index.mjs",
+        "build": "nuxi cleanup && nuxi build",
+        "cleanup": "nuxi cleanup",
+        "dev": "nuxt dev --port=3000 --host=127.0.0.1",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare"
+    },
+    "devDependencies": {
+        "@nuxt/devtools": "^3.0",
+        "@nuxt/image": "^2.0.0",
+        "@nuxt/ui": "^4.0.0",
+        "@nuxtjs/i18n": "^10.0.0",
+        "@nuxtjs/seo": "^3.0.3",
+        "@pinia/nuxt": "^0.11.0",
+        "@tailwindcss/postcss": "^4.1.5",
+        "cross-env": "^7.0.3",
+        "dayjs-nuxt": "^2.1.9",
+        "nuxt": "^4.3.1",
+        "nuxt-security": "^2.2.0",
+        "postcss": "^8.5.3",
+        "tailwindcss": "^4.1.5"
+    }
+}
