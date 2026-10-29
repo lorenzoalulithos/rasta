@@ -75,6 +75,8 @@ return $config->setUsingCache(true)
                       'self_accessor' => false,
                       'single_import_per_statement' => false,
                       'single_trait_insert_per_statement' => false,
+                      // Pest binds test closures to the TestCase: they must not be static
+                      'static_lambda' => false,
                       'strict_comparison' => true,
                       'strict_param' => true,
                       'yoda_style' => false,

@@ -1,6 +1,7 @@
-name: rasta
+name: app-artigiani
 type: laravel
-docroot: public
+docroot: api/public
+composer_root: api
 php_version: "8.5"
 webserver_type: nginx-fpm
 xdebug_enabled: false

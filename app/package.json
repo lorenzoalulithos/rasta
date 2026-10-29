@@ -1,0 +1,25 @@
+{
+    "name": "app-artigiani",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev --port=3000 --host=127.0.0.1",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "lint": "eslint .",
+        "postinstall": "nuxt prepare"
+    },
+    "dependencies": {
+        "@nuxt/ui": "^4.12.0",
+        "@pinia/nuxt": "^1.0.3",
+        "nuxt": "^4.6.3",
+        "pinia": "^4.1.0",
+        "tailwindcss": "^4.3.3"
+    },
+    "devDependencies": {
+        "@iconify-json/lucide": "^1.2.149",
+        "@nuxt/eslint": "^1.17.0",
+        "eslint": "^10.13.0"
+    }
+}

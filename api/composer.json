@@ -23,6 +23,8 @@
         "mockery/mockery": "^1.6.15",
         "nunomaduro/collision": "^8.9",
         "nunomaduro/phpinsights": "^2.15",
+        "pestphp/pest": "^5.3",
+        "pestphp/pest-plugin-laravel": "^5.0",
         "phpmd/phpmd": "^3.0",
         "phpstan/phpstan": "^2.3",
         "phpunit/phpunit": "^13.0",

@@ -28,8 +28,8 @@ app-artigiani/
 - **PDF**: `barryvdh/laravel-dompdf`, template Blade in `resources/views/pdf/quote.blade.php`. CSS inline, niente font esterni (DejaVu Sans). Generazione sincrona.
 - **Calcolatore**: `App\Services\Calculator\PainterCalculator` implementa `CalculatorInterface`. Il tenant ha un campo `trade` (default `painter`) che seleziona l'implementazione. È l'unico punto "a moduli" del codice.
 - **Seed**: `php artisan db:seed --class=PainterCatalogSeeder` legge `docs/seed/*.json` e popola catalogo del tenant. Usato anche dall'endpoint "carica esempio" del primo avvio.
-- **Test**: Pest. Obbligatori per calcolatore, numerazione, transizioni di stato, impegnato/disponibile. Feature test sugli endpoint principali.
-- **Formatting**: Laravel Pint, config di default.
+- **Test**: Pest 5 (su PHPUnit 13), `pestphp/pest-plugin-laravel`. Nei test usare le funzioni `Pest\Laravel\get()` & co. invece di `$this->get()` (PHPStan non conosce `$this` nelle closure Pest). Obbligatori per calcolatore, numerazione, transizioni di stato, impegnato/disponibile. Feature test sugli endpoint principali.
+- **Formatting e analisi statica**: `composer test-style` (phpmd, phpmnd, php-cs-fixer, phpcs, phpstan livello 8, phpinsights), standard del template Lithos. Deve essere verde prima di ogni commit. Pint resta installato ma non è il riferimento.
 - **Money**: decimali `DECIMAL(10,2)` nel DB, calcoli con `brick/money` o `bcmath`, mai float sui totali.
 
 ## Frontend – `app/`
@@ -63,7 +63,7 @@ app-artigiani/
 
 GitHub Actions (`.github/workflows/`), su PR e push su `main`:
 
-- `tests.yml`: test API su PHP 8.5 + MySQL 8, build del frontend su Node da `.nvmrc`.
+- `tests.yml`: job `api` (Pest su PHP 8.5 + MySQL 8, in `api/`) e job `app` (lint + `nuxt generate` su Node da `app/.nvmrc`, in `app/`).
 - `style-checks.yml`: `composer test-style`.
 - `security-checks.yml`: `composer audit` e `npm audit --audit-level=high`.
 

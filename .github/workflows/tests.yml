@@ -6,10 +6,13 @@ on:
     types: [ opened, synchronize, reopened, ready_for_review ]
   workflow_dispatch:
 jobs:
-  tests:
+  api:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: api
 
     services:
       mysql:
@@ -42,7 +45,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('api/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
 
@@ -54,10 +57,13 @@ jobs:
         env:
           DB_HOST: 127.0.0.1
 
-  frontend:
+  app:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: app
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -65,11 +71,15 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: 'app/.nvmrc'
           cache: npm
+          cache-dependency-path: app/package-lock.json
 
       - name: Install node dependencies
         run: npm ci
 
-      - name: Build frontend
-        run: npm run build
+      - name: Lint
+        run: npm run lint
+
+      - name: Build static app
+        run: npm run generate

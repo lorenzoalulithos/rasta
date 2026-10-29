@@ -6,7 +6,7 @@ Prefisso: **A** = api, **F** = app (frontend), **M** = manuale (Lollo).
 
 ## Fase 0 – Scheletro (manuale)
 
-- [ ] **M0.1** Monorepo, `api/` con Laravel 12 fresh, `app/` con Nuxt 4 fresh + Nuxt UI 4, DDEV configurato, `docs/` con questi file, `CLAUDE.md`.
+- [x] **M0.1** Monorepo, `api/` con Laravel 13 fresh, `app/` con Nuxt 4 fresh + Nuxt UI 4, DDEV configurato, `docs/` con questi file, `CLAUDE.md`.
 - [ ] **M0.2** `GET /api/ping` da Laravel e una pagina Nuxt che lo chiama e stampa la risposta. CORS ok. Primo commit.
 
 ## Fase 1 – Fondamenta API

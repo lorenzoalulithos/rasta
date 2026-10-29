@@ -22,12 +22,14 @@ jobs:
           coverage: none
 
       - name: Composer audit
+        working-directory: api
         run: composer audit --locked
 
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: 'app/.nvmrc'
 
       - name: npm audit
+        working-directory: app
         run: npm audit --package-lock-only --audit-level=high

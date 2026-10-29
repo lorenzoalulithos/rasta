@@ -49,9 +49,9 @@ Leggi, in quest'ordine, e non saltarli anche se il task sembra ovvio:
 # API (dentro DDEV)
 ddev artisan migrate:fresh --seed
 ddev artisan test
-ddev exec vendor/bin/pint
+ddev composer test-style
 
-# App
+# App (sul Mac, mai `ddev npm`: mutagen sincronizza node_modules e rompe i binding nativi)
 cd app && npm run dev        # http://localhost:3000
 cd app && npm run lint
 ```

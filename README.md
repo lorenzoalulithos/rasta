@@ -1,141 +1,71 @@
-# Rasta
+# App Artigiani
 
-Here we are with Rasta
+Gestionale PWA per artigiani (modulo Pittori in v1): preventivi con calcolo materiali, magazzino, chiusura cantiere.
 
+- `api/` – Laravel 13, PHP 8.5 (DDEV)
+- `app/` – Nuxt 4 SPA + Nuxt UI 4
+- `docs/` – specifiche: [domain](docs/domain.md), [flows](docs/flows.md), [api](docs/api.md), [stack](docs/stack.md), [roadmap](docs/roadmap.md)
 
+Regole di lavoro: [CLAUDE.md](CLAUDE.md).
 
-## Description
+## Avvio
 
-Laravel template to boot a fresh new Laravel project in seconds.
-
-## Startup
-
-### Start DDEV
+### API
 
 ```shell
 ddev start
-```
-
-### Install php dependencies
-
-```shell
 ddev composer install
+ddev artisan migrate --seed
 ```
 
-### Run database migration
+URL: `https://app-artigiani.ddev.site`.
 
-The project uses two database:
+Il progetto usa due database:
 
-* For `local` environment: `db`
-* For `testing` environment: `db_test`
+* ambiente `local`: `db`
+* ambiente `testing`: `db_test` (creato dall'hook `post-start` di DDEV, svuotato da `RefreshDatabase`)
 
-Migrations on `db_test` are not required since `RefreshDatabase` trait is used.
-See [Resetting The Database After Each Test](https://laravel.com/docs/5.7/database-testing#resetting-the-database-after-each-test)
-for more information.
+### App
+
+Nuxt gira sul Mac, fuori da DDEV (Node da `app/.nvmrc`):
 
 ```shell
-ddev php artisan migrate
+cd app
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-### Run seeders
+`NUXT_PUBLIC_API_BASE` sovrascrive l'URL delle API (default `https://app-artigiani.ddev.site/api`).
+
+Non usare `ddev npm`: mutagen sincronizza `node_modules` nel container e rompe i binding nativi sul Mac.
+
+## Controlli prima del commit
 
 ```shell
-ddev php artisan db:seed
+ddev artisan test           # Pest
+ddev composer test-style    # phpmd, phpmnd, php-cs-fixer, phpcs, phpstan, phpinsights
+cd app && npm run lint
 ```
 
-To set up a fresh version of database and run seeders at the same time:
-
-```php
-ddev php artisan migrate:fresh --seed
-```
-
-## Styles and static analyzers
-
-Run checks prior to commit
+Correzione automatica dello stile PHP:
 
 ```shell
-ddev composer test-style
-```
-
-Fix style in project with PHP CS Fixer:
-
-```shell
-ddev exec ./vendor/bin/php-cs-fixer fix
-```
-
-Fix style in project with PHP Code Beautifier and Fixer :
-
-```shell
-ddev exec ./vendor/bin/phpcbf
-```
-
-To run Php Insights with verbose output:
-
-```shell
-ddev exec ./vendor/bin/phpinsights -v
-```
-
-## Testing
-
-Run tests with:
-
-```shell
-ddev php artisan test
-```
-
-or:
-
-```shell
-ddev exec ./vendor/bin/phpunit
+ddev exec -d /var/www/html/api vendor/bin/php-cs-fixer fix
+ddev exec -d /var/www/html/api vendor/bin/phpcbf
 ```
 
 ## Coverage
 
-Run tests coverage with:
-
 ```shell
 ddev xdebug
+ddev exec -d /var/www/html/api XDEBUG_MODE=coverage php artisan test --coverage
 ```
 
-and:
+## Code
+
+Di default le code sono sincrone (`QUEUE_CONNECTION=sync`, anche nei test via `phpunit.xml`).
+In locale, con `QUEUE_CONNECTION=redis`:
 
 ```shell
-ddev exec XDEBUG_MODE=coverage php artisan test
-```
-
-Reports are in `public/coverage` and visible at
-
-```
-https://rasta.ddev.site/coverage
-```
-
-## Queues
-
-By defaults, queues are sync:
-
-```dotenv
-QUEUE_CONNECTION=sync
-```
-
-It's possibile to set the async with:
-
-```dotenv
-QUEUE_CONNECTION=redis
-```
-
-Redis is used as message queues manager.
-
-### Local development
-
-```shell
-ddev php artisan queue:work
-```
-
-### Test
-
-During tests, queues are sync since in  `phpunit.xml` there is:
-
-```xml
-
-<server name="QUEUE_CONNECTION" value="sync"/>
+ddev artisan queue:work
 ```
