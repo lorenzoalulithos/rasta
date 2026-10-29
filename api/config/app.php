@@ -77,7 +77,8 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    // UI, messages and PDF are in Italian (CLAUDE.md)
+    'locale' => env('APP_LOCALE', 'it'),
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 

@@ -2,7 +2,7 @@
 
 Base: `/api`. Tutte le route tranne `/auth/login` richiedono `Authorization: Bearer <token>`. Tutte le risorse sono scoped sul tenant dell'utente: nessun `tenant_id` nelle richieste.
 
-Risposte: `{ data }` per singolo, `{ data, meta }` per liste paginate (`?page=`, `?per_page=`, default 25). Errori di validazione: 422 standard Laravel. Non autorizzato: 401. Transizione di stato non ammessa: 409 con `{ message }`.
+Risposte: `{ data }` per singolo, `{ data, meta, links }` per liste paginate (paginazione standard Laravel; `?page=`, `?per_page=`, default 25, max 100). Messaggi di errore in italiano. Errori di validazione: 422 standard Laravel. Non autorizzato: 401. Transizione di stato non ammessa: 409 con `{ message }`.
 
 ## Auth
 

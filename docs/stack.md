@@ -28,7 +28,7 @@ app-artigiani/
 - **PDF**: `barryvdh/laravel-dompdf`, template Blade in `resources/views/pdf/quote.blade.php`. CSS inline, niente font esterni (DejaVu Sans). Generazione sincrona.
 - **Calcolatore**: `App\Services\Calculator\PainterCalculator` implementa `CalculatorInterface`. Il tenant ha un campo `trade` (default `painter`) che seleziona l'implementazione. È l'unico punto "a moduli" del codice.
 - **Seed**: `php artisan db:seed --class=PainterCatalogSeeder` legge `docs/seed/*.json` e popola catalogo del tenant. Usato anche dall'endpoint "carica esempio" del primo avvio.
-- **Test**: Pest 5 (su PHPUnit 13), `pestphp/pest-plugin-laravel`. Nei test usare le funzioni `Pest\Laravel\get()` & co. invece di `$this->get()` (PHPStan non conosce `$this` nelle closure Pest). Obbligatori per calcolatore, numerazione, transizioni di stato, impegnato/disponibile. Feature test sugli endpoint principali.
+- **Test**: Pest 5 (su PHPUnit 13), `pestphp/pest-plugin-laravel`. Nei test usare le funzioni `Pest\Laravel\get()` & co. invece di `$this->get()` (PHPStan non conosce `$this` nelle closure Pest); per lo stesso motivo niente `$this->x` in `beforeEach`: usare helper come `signInTenant()` in `tests/helpers.php`. Obbligatori per calcolatore, numerazione, transizioni di stato, impegnato/disponibile. Feature test sugli endpoint principali.
 - **Formatting e analisi statica**: `composer test-style` (phpmd, phpmnd, php-cs-fixer, phpcs, phpstan livello 8, phpinsights), standard del template Lithos. Deve essere verde prima di ogni commit. Pint resta installato ma non è il riferimento.
 - **Money**: decimali `DECIMAL(10,2)` nel DB, calcoli con `brick/money` o `bcmath`, mai float sui totali.
 
