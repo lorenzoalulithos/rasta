@@ -14,7 +14,12 @@ return new class extends Migration {
         Schema::create(
             new User()->getTable(),
             static function (Blueprint $table): void {
-                $table->id();
+                $table->uuid('id')
+                      ->primary();
+
+                $table->foreignUuid('tenant_id')
+                      ->constrained()
+                      ->cascadeOnDelete();
 
                 $table->string('name');
 
@@ -51,7 +56,7 @@ return new class extends Migration {
                 $table->string('id')
                       ->primary();
 
-                $table->foreignId('user_id')
+                $table->foreignUuid('user_id')
                       ->nullable()
                       ->index();
 

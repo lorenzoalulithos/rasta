@@ -50,6 +50,48 @@ final class MigrationConstants
     public const SUPER_LONG_STRING_MAX_LENGTH = 3000;
 
     /**
+     * Total digits of money and quantity columns: DECIMAL(10, x).
+     *
+     * @var int
+     */
+    public const DECIMAL_PRECISION = 10;
+
+    /**
+     * Decimals of money columns: DECIMAL(10,2), never float (domain.md).
+     *
+     * @var int
+     */
+    public const MONEY_SCALE = 2;
+
+    /**
+     * Decimals of computed quantities and packages: DECIMAL(10,3) (domain.md §7.1).
+     *
+     * @var int
+     */
+    public const QUANTITY_SCALE = 3;
+
+    /**
+     * Total digits of percentages, e.g. VAT rate 22.00.
+     *
+     * @var int
+     */
+    public const RATE_PRECISION = 5;
+
+    /**
+     * Total digits of ratios between 0 and 1, e.g. opened package ratio 0.50.
+     *
+     * @var int
+     */
+    public const RATIO_PRECISION = 3;
+
+    /**
+     * Total digits of coverage values in m² per base unit, e.g. 55.00.
+     *
+     * @var int
+     */
+    public const COVERAGE_PRECISION = 8;
+
+    /**
      * Maximum value that can be stored on the database for unsigned integer columns.
      *
      * @var int

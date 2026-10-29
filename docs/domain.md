@@ -60,6 +60,7 @@ Dati dell'intestazione documenti e impostazioni di calcolo.
 | coverage_strategy | enum: `min`, `avg`, `max` | come usare la resa nel calcolo. Default `avg` |
 | opened_package_ratio | decimal | quanto vale una confezione aperta ai fini del disponibile. Default 0.5 |
 | package_rounding | enum: `up`, `fractional` | arrotondamento confezioni nel fabbisogno. Default `up` |
+| trade | enum: `painter` | mestiere, seleziona il calcolatore (vedi `stack.md`). Default `painter`, unico valore in v1 |
 
 ### 3.2 User (Utente)
 Appartiene a un tenant. Email, password, nome. Auth con Sanctum (token per la PWA).
@@ -100,7 +101,7 @@ Tutto ciò che si compra: vernici, stucchi, consumabili, attrezzi.
 | package_label | string | "bidone 14 lt", "sacco 5 kg", "rotolo" |
 | list_price | decimal, null | prezzo listino unitario, informativo |
 | discount_notes | string, null | "35%+20%", solo informativo |
-| cost_price | decimal | **prezzo pagato per confezione, IVA inclusa**. È l'unico usato nei calcoli |
+| cost_price | decimal, null | **prezzo pagato per confezione, IVA inclusa**. È l'unico usato nei calcoli. Null solo se manca nel foglio (§8.2) |
 | shipping_excluded | bool | true per i prodotti "(+ sped)" |
 | coverage_min | decimal, null | resa minima, `base_unit` → mq (es. 8 mq/lt) |
 | coverage_max | decimal, null | resa massima (es. 10) |
@@ -116,7 +117,7 @@ Tutto ciò che si compra: vernici, stucchi, consumabili, attrezzi.
 `coverage` effettiva usata dal calcolatore = f(`coverage_strategy` del tenant): `min` → coverage_min, `max` → coverage_max, `avg` → media dei due. Se uno solo è presente, usa quello.
 
 ### 3.6 Job (Lavorazione)
-Un servizio vendibile a preventivo.
+Un servizio vendibile a preventivo. Tabella `jobs`: le code di Laravel usano `queue_jobs` per non collidere.
 
 | campo | tipo | note |
 |---|---|---|

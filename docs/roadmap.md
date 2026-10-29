@@ -11,7 +11,7 @@ Prefisso: **A** = api, **F** = app (frontend), **M** = manuale (Lollo).
 
 ## Fase 1 – Fondamenta API
 
-- [ ] **A1.1** Migration + model di tutte le entità di `domain.md §3` (incluse quelle v1.1 come sole migration). UUID v7, `tenant_id`, enum PHP. Fatto quando: `php artisan migrate:fresh` pulito, model con relazioni e cast.
+- [x] **A1.1** Migration + model di tutte le entità di `domain.md §3` (incluse quelle v1.1 come sole migration). UUID v7, `tenant_id`, enum PHP. Fatto quando: `php artisan migrate:fresh` pulito, model con relazioni e cast.
 - [ ] **A1.2** Auth Sanctum: login/logout/me, global scope `BelongsToTenant`, command `app:create-tenant` che crea tenant + utente. Fatto quando: feature test login → me → logout.
 - [ ] **A1.3** Seeder `PainterCatalogSeeder` da `docs/seed/*.json` + endpoint `POST /tenant/seed-catalog`. Fatto quando: dopo il seed, `GET /jobs` restituisce 7 lavorazioni attive con i materiali suggeriti e `GET /materials` 72 materiali con stock a zero.
 - [ ] **A1.4** CRUD clienti e cantieri, tenant GET/PATCH. Resource, Form Request, test.

@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create(
-            'jobs',
+            'queue_jobs',
             static function (Blueprint $table): void {
                 $table->id();
 
@@ -87,7 +87,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('jobs');
+        Schema::dropIfExists('queue_jobs');
         Schema::dropIfExists('job_batches');
         Schema::dropIfExists('failed_jobs');
     }
