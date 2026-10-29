@@ -1,6 +1,6 @@
 #!/bin/bash
 
-vendor/bin/phpmd app,bootstrap,config,database,routes,tests text phpmd.xml && # can produce this issue: https://github.com/phpmd/phpmd/issues/853
+vendor/bin/phpmd analyze app bootstrap config database routes tests --format text --ruleset phpmd.xml && # can produce this issue: https://github.com/phpmd/phpmd/issues/853
 vendor/bin/phpmnd --hint --progress --extensions=all,-property --allow-array-mapping app &&
 vendor/bin/phpmnd --hint --progress --allow-array-mapping database &&
 vendor/bin/phpmnd --hint --progress --extensions=all --allow-array-mapping routes &&

@@ -12,7 +12,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create(
-            (new User())->getTable(),
+            new User()->getTable(),
             static function (Blueprint $table): void {
                 $table->id();
 
@@ -74,7 +74,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists((new User())->getTable());
+        Schema::dropIfExists(new User()->getTable());
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }

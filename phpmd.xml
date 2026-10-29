@@ -13,6 +13,7 @@
 
     <rule ref="rulesets/controversial.xml">
         <exclude name="CamelCaseMethodName"/>
+        <exclude name="CamelCaseNamespace"/>
     </rule>
     <rule ref="rulesets/design.xml">
         <exclude name="DepthOfInheritance"/>
@@ -25,6 +26,7 @@
         <exclude name="ShortVariable"/>
         <exclude name="LongVariable"/>
         <exclude name="LongClassName"/>
+        <exclude name="LongMethodName"/>
     </rule>
     <rule ref="rulesets/unusedcode.xml">
         <exclude name="UnusedFormalParameter"/>

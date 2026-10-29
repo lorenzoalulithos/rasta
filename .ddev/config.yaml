@@ -1,4 +1,4 @@
-name: laravel-and-nuxt-template
+name: rasta
 type: laravel
 docroot: public
 php_version: "8.5"

@@ -41,9 +41,9 @@ return $config->setUsingCache(true)
                   [
                       '@Symfony' => true,
                       '@Symfony:risky' => true,
-                      '@PHP82Migration' => true,
-                      '@PHP80Migration:risky' => true,
-                      '@PHPUnit100Migration:risky' => true,
+                      '@PHP8x5Migration' => true,
+                      '@PHP8x0Migration:risky' => true,
+                      '@PHPUnit11x0Migration:risky' => true,
                       '@DoctrineAnnotation' => true,
                       'blank_line_after_opening_tag' => false,
                       'combine_consecutive_unsets' => true,

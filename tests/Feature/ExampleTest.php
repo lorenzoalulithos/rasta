@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Http\Response;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
@@ -10,9 +11,7 @@ use Tests\TestCase;
  */
 final class ExampleTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function the_application_returns_a_successful_response(): void
     {
         $response = $this->get('/');
