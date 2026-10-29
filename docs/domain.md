@@ -191,7 +191,7 @@ I materiali effettivamente selezionati per quella riga, con il fabbisogno calcol
 | selected | bool | spuntato dall'utente |
 | coverage_used | decimal, null | resa usata nel calcolo |
 | required_quantity | decimal | quantità teorica in `base_unit` (es. 40.2 lt) |
-| required_packages | decimal | confezioni, arrotondate secondo `package_rounding` |
+| required_packages | decimal(10,3) | confezioni, arrotondate secondo `package_rounding`. 3 decimali: con `fractional` lo snapshot deve ridare lo stesso costo del calcolo |
 | unit_cost | decimal | `cost_price` del materiale al momento del calcolo |
 | estimated_cost | decimal | `required_packages * unit_cost` |
 
@@ -303,6 +303,8 @@ required_pkgs = ceil(packages_raw)  se package_rounding = up, altrimenti package
 estimated_cost = required_pkgs * material.cost_price
 ```
 
+Precisione: `required_qty` e `required_pkgs` si salvano a 3 decimali; si arrotonda a 2 decimali solo `estimated_cost` (e gli altri importi), alla fine del calcolo.
+
 ### 7.2 Formula per materiale `per_unit`
 
 ```
@@ -317,16 +319,16 @@ Materiale primario: Tempera Wallcream, bidone 14 lt, resa 8/10, cost_price 47,69
 
 ```
 coverage       = 9 mq/lt
-required_qty   = 181 * 2 / 9        = 40,2 lt
-packages_raw   = 40,2 / 14          = 2,87
+required_qty   = 181 * 2 / 9        = 40,222 lt
+packages_raw   = 40,222 / 14        = 2,873
 required_pkgs  = 3  (rounding up)
 estimated_cost = 3 * 47,69          = 143,07 €
-margine riga   = 724,00 - 143,07    = 580,93 €  (80%)
+margine riga   = 724,00 - 143,07    = 580,93 €  (80,2%)
 ```
 
-Con `fractional`: 2,87 × 47,69 = 136,96 €.
+Con `fractional`: 2,873 × 47,69 = 137,01 €.
 
-**Discrepanza da chiarire col socio.** Nel suo foglio il "costo medio per 100 mq" dell'imbiancatura è 60,51 €. Rifacendo i conti torna solo con: 100 mq × 2 mani / 9,2 mq/lt = 21,7 lt = 1,55 bidoni × **39,09 € (prezzo senza IVA)** ≈ 60,5 €. Cioè lui calcola il costo con confezioni frazionarie e **prezzo IVA esclusa**, ma da forfettario l'IVA la paga davvero. Due opzioni:
+**Discrepanza da chiarire col socio.** Nel suo foglio il "costo medio per 100 mq" dell'imbiancatura è 60,51 €. Rifacendo i conti torna solo con: 100 mq × 2 mani / 9,2 mq/lt = 21,7 lt = 1,55 bidoni × **39,09 € (prezzo senza IVA)** ≈ 60,7 € (vicino ai 60,51 del foglio; nessun'altra combinazione si avvicina). Cioè lui calcola il costo con confezioni frazionarie e **prezzo IVA esclusa**, ma da forfettario l'IVA la paga davvero. Due opzioni:
 - (a) teniamo `cost_price` IVA inclusa (più onesto: è quello che esce dal conto) e gli spieghiamo che i margini che vedrà sono un po' più bassi dei suoi
 - (b) aggiungiamo un flag tenant `cost_includes_vat` e lo lasciamo scegliere
 
@@ -341,18 +343,19 @@ Se `estimated_hours_per_unit` è valorizzato: `hours = quantity * estimated_hour
 
 Tutto importato dalla lista prezzi del socio, normalizzata. File in `docs/seed/`.
 
-### 8.1 Lavorazioni v1 (6)
+### 8.1 Lavorazioni v1 (7)
 
 | name | unit | unit_price | default_coats | materiale primario |
 |---|---|---|---|---|
 | Imbiancatura interna | sqm | 4,00 | 2 | Tempera Wallcream 14 lt |
 | Imbiancatura esterna / Lavabile | sqm | 10,00 | 2 | Lavabile quarzo PaintTop 15 lt |
 | Ringhiere (smalto) | sqm | 10,00 | 2 | Smalto antiruggine UltraGlobal 2,5 lt |
-| Rasatura | sqm | 8,50 / 12,00 | 1 | Stucco gesso Tamstucco 5 kg / Stucco fibrato 20 kg |
+| Rasatura Con Stucco Gesso | sqm | 8,50 | 1 | Stucco gesso Tamstucco 5 kg |
+| Rasature Con Stucco fibrato | sqm | 12,00 | 1 | Stucco fibrato 20 kg |
 | Stuccature | hour | 50,00 | – | nessuno (stucco come secondario a `per_unit`, se vuole) |
 | Legno – impregnante | sqm | 6,50 | 2 | Impregnante Borma Wachs 2,5 lt |
 
-Rasatura: due varianti (gesso / fibrato) → due lavorazioni separate nel seed, o una sola con due materiali primari alternativi. Decidere in UI, io propongo due lavorazioni.
+Rasatura: due varianti (gesso / fibrato) → due lavorazioni separate, come in `jobs.json`.
 
 Secondari suggeriti per imbiancatura interna: Fissativo (coverage, apply_coats false, selected_by_default false), Stucco gesso (per_unit, selected_by_default false). Checklist: rullo, rullini, pennello, nastro carta, teli nylon, teli feltro, paperella, scala, asta.
 
@@ -388,5 +391,6 @@ Secondari suggeriti per imbiancatura interna: Fissativo (coverage, apply_coats f
 
 - [ ] Confermare col socio il punto 7.3 (costo IVA inclusa vs esclusa)
 - [ ] Confermare i 6 prezzi delle lavorazioni v1 e i materiali primari
-- [ ] Rasatura: una lavorazione o due
+- [x] Rasatura: due lavorazioni (gesso / fibrato), come nel seed
+- [ ] Righe complete del preventivo Belissi (totale 974,00 €: 724,00 € di imbiancatura + 250,00 € da definire) per il test di A2.3
 - [ ] `estimated_hours_per_unit`: lo popoliamo in v1 o no

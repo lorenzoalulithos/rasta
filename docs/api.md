@@ -110,7 +110,7 @@ Le righe libere (`job_id` null) non hanno materiali e non entrano nel costo stim
       "role": "primary",
       "selected": true,
       "coverage_used": 9,
-      "required_quantity": 40.22,
+      "required_quantity": 40.222,
       "required_packages": 3,
       "unit_cost": 47.69,
       "estimated_cost": 143.07
