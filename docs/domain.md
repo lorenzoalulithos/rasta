@@ -56,7 +56,7 @@ Dati dell'intestazione documenti e impostazioni di calcolo.
 | tax_regime | enum: `forfettario`, `ordinario` | default `forfettario` |
 | default_vat_rate | decimal | default 0 se forfettario, 22 se ordinario |
 | quote_validity_days | int | default 90 |
-| quote_footer_text | text | nota fiscale stampata in fondo al PDF (es. testo art.1 c.54-89 L.190/2014 + bollo) |
+| quote_footer_text | text | nota fiscale stampata in fondo al PDF. Testo usato dal socio: "Operazione senza applicazione Iva nei sensi dell'articolo 1, commi 54-89 L. 190/2014, regime forfettario, imposta di bollo assolta su originale" (nel suo PDF c'è "commi 64-89": il riferimento di legge è 54-89, da confermare con lui o col commercialista) |
 | default_payment_terms | string, null | "Rimessa diretta". Copiato su `Quote.payment_terms` alla creazione |
 | coverage_strategy | enum: `min`, `avg`, `max` | come usare la resa nel calcolo. Default `avg` |
 | opened_package_ratio | decimal | quanto vale una confezione aperta ai fini del disponibile. Default 0.5 |
@@ -248,6 +248,11 @@ Righe `PurchaseLine`: material_id, packages, unit_cost. Alla conferma dell'acqui
 ### 3.14 Previste in v1.1 (solo per non chiudere porte nel modello)
 - **CalendarEvent**: site_id, date, start/end time, notes, quote_id null. Lista da portare = materiali `checklist` delle lavorazioni del preventivo + consumabili.
 - **DeliveryNote (DDT)**: numero per anno, causale, destinazione = cantiere, righe materiale con unità e quantità libera (anche "1 e 1/2"), firme. Non muove il magazzino.
+  Dal DDT di esempio del socio (n. 10 del 04/05/2026):
+  - il **destinatario** non è per forza il cliente (lì è il socio stesso, a un altro indirizzo) e il **luogo di destinazione** è un campo a parte (il cantiere);
+  - causale libera ("Materiale per Lavorazione"), **trasporto a mezzo** mittente / vettore / destinatario, **vettore**, **data ritiro**, **annotazioni**;
+  - **tre firme**: mittente, vettore, destinatario;
+  - unità di misura libere e lunghe ("Bidoni da 14lt", "Ricambi", "Flaconi"), quantità libere ("Circa 5", "3 +3").
 
 ---
 
@@ -275,6 +280,13 @@ Purchase 1─n PurchaseLine n─1 Material
 6. **Mani**: `coats` moltiplica il consumo solo dei materiali con `apply_coats = true`. Non tocca il prezzo: il prezzo a 1 mano lo corregge l'utente.
 7. **Snapshot**: righe e materiali del preventivo copiano descrizione, prezzi, rese e costi al momento del calcolo. Modificare il catalogo non altera preventivi esistenti. Un bottone "ricalcola" aggiorna esplicitamente.
 8. **PDF**: stampa intestazione tenant, destinatario e destinazione (cliente e cantiere), righe con descrizione / quantità + unità / prezzo unitario / importo, totali, footer, scadenza. **Mai i materiali, mai costi/margine, mai le note private.** Le righe a ore mostrano la quantità in ore come qualsiasi altra riga: non serve un template separato.
+   Struttura ripresa dal PDF Belissi del socio (per A2.5):
+   - in alto: nome ditta in grande, sotto indirizzo, P.IVA e codice fiscale; a destra "Preventivo nr [1] del [10/01/2026]";
+   - due riquadri affiancati **Destinatario** (cliente) e **Destinazione** (cantiere; se il cantiere non ha indirizzo, quello del cliente);
+   - tabella **Descrizione · Quantità · Prezzo unitario · Importo**. Le colonne "Cod Artic." e "Sconto" dell'originale non servono (niente codici, niente sconti). Unità stampata per esteso: "181 mq", "2 ore", "1 unità" (l'originale scrive "mt" per i mq);
+   - sotto le righe, nella colonna descrizione: il `footer_text` e la frase di scadenza;
+   - in fondo un riquadro: a sinistra **Pagamento:** `payment_terms`; a destra Totale netto, + Imposta IVA, **Totale**. La "Ritenuta d'acconto" dell'originale non si gestisce (sempre 0 per il forfettario);
+   - a piè di pagina: "Pag. 1" e "Vi preghiamo di controllare i Vs. dati anagrafici e la Partita IVA. Non ci riteniamo responsabili di eventuali errori."
 9. **Impegnato**: solo preventivi `accepted`. `draft`, `sent`, `rejected`, `completed` non impegnano.
 10. **Scarico**: alla chiusura (`completed`) l'app propone per ogni materiale selezionato il consumo stimato in confezioni (chiuse/aperte); l'utente conferma o corregge; si creano `StockMovement` di tipo `consumption` e la giacenza scende. L'impegnato di quel preventivo si azzera automaticamente perché lo stato non è più `accepted`.
 11. **Lista da comprare**: tutti i materiali con `available < min_stock`, mostrando quantità e i cantieri (preventivi accettati) che li richiedono.
@@ -322,6 +334,17 @@ required_qty  = line.quantity * consumption_per_unit * (coats se apply_coats)
 ```
 
 ### 7.3 Verifica sul preventivo Belissi
+
+Preventivo reale del socio: **n. 1 del 10/01/2026**, Condominio Belissi, forfettario (IVA 0), pagamento "Rimessa diretta".
+
+| riga | lavorazione | quantità | prezzo | importo | materiali |
+|---|---|---|---|---|---|
+| Imbiancatura vano scala interno a due mani con pittura a tempera | Imbiancatura interna | 181 mq, 2 mani | 4,00 | 724,00 | Tempera Wallcream |
+| Stuccature interne | Stuccature | 2 ore | 50,00 | 100,00 | nessuno (lo stucco è secondario, non spuntato) |
+| Carteggiatura e tinteggiatura portone esterno con smalto in tinta | riga libera | 1 unità | 150,00 | 150,00 | nessuno |
+| **Totale** | | | | **974,00** | costo stimato 143,07 → margine 830,93 (85,3%) |
+
+Calcolo della prima riga:
 
 Riga: Imbiancatura vano scala, 181 mq, 2 mani, 4,00 €/mq → importo 724,00 €.
 Materiale primario: Tempera Wallcream, bidone 14 lt, resa 8/10, cost_price 47,69 € (IVA incl.).
@@ -410,5 +433,7 @@ Secondari suggeriti per imbiancatura interna: Fissativo (coverage, apply_coats f
 - [ ] Confermare i 6 prezzi delle lavorazioni v1 e i materiali primari
 - [x] Rasatura: due lavorazioni (gesso / fibrato), come nel seed
 - [x] Eliminare un materiale usato solo in preventivi chiusi: si **archivia** (`archived_at`), sparisce dal catalogo e dai suggerimenti delle lavorazioni, resta nello storico
-- [ ] Righe complete del preventivo Belissi (totale 974,00 €: 724,00 € di imbiancatura + 250,00 € da definire) per il test di A2.3
+- [x] Righe complete del preventivo Belissi: nel §7.3, dal PDF reale del socio
 - [ ] `estimated_hours_per_unit`: lo popoliamo in v1 o no
+- [ ] Scadenza: il socio scrive "scadrà a tre mesi dalla data di creazione"; noi usiamo `quote_validity_days` (90) e stampiamo la data. Va bene la data precisa?
+- [ ] Prezzi lavorazioni: la tabella "Prezzo Finale" del foglio del socio ha valori diversi dalla tabella lavorazioni usata per il seed (es. Antimacchia 30 € vs 20/50 €, Ringhiere 8/9/10 € per tipo di smalto, Stucco veneziano 70 € vs 50/70 €). Il seed usa la tabella lavorazioni: confermare quale vale

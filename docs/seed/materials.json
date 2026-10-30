@@ -59,7 +59,7 @@
     "package_label": "latta 4 lt",
     "list_price": 49.45,
     "discount_notes": "35,00%+20,00%",
-    "cost_price": null,
+    "cost_price": 31.37,
     "shipping_excluded": false,
     "coverage_min": 14.0,
     "coverage_max": 16.0,
@@ -289,7 +289,7 @@
     "source_row": 22
   },
   {
-    "name": "Vern. Protettiva Extramarine 2,5lt",
+    "name": "Vern. Protettiva Extramarine 2,5lt (acqua)",
     "category": "wood",
     "kind": "consumable_quantity",
     "base_unit": "lt",
@@ -425,7 +425,7 @@
     "source_row": 33
   },
   {
-    "name": "Vern. Protettiva Extramarine 2,5lt",
+    "name": "Vern. Protettiva Extramarine 2,5lt (sintetico)",
     "category": "wood",
     "kind": "consumable_quantity",
     "base_unit": "lt",

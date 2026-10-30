@@ -130,25 +130,30 @@ it('uses the only coverage present and gives zero without coverage or price', fu
         ->and($withoutPrice->estimatedCost)->toBe('0.00');
 });
 
-it('totals a quote with margin, VAT and hours', function (): void {
+it('totals the real Belissi quote: 724 + 100 + 150 = 974.00 €, margin 85.3%', function (): void {
     $calculator = new PainterCalculator();
     $settings = new CalculationSettings();
     $painting = $calculator->line(CalculatorFixtures::belissiLine([CalculatorFixtures::tempera()]), $settings);
-    // Second line of the example: 250.00 € of hourly work without materials (placeholder until the real Belissi lines)
-    $hourly = $calculator->line(new LineInput(quantity: '5', unitPrice: '50.00', isHourly: true), $settings);
+    // Stuccature interne: 2 ore × 50.00, stucco not ticked
+    $hourly = $calculator->line(new LineInput(quantity: '2', unitPrice: '50.00', isHourly: true), $settings);
+    // Carteggiatura e tinteggiatura portone esterno: free line, 1 unità × 150.00
+    $free = $calculator->line(new LineInput(quantity: '1', unitPrice: '150.00'), $settings);
+    $lines = [$painting, $hourly, $free];
 
-    $forfettario = $calculator->totals([$painting, $hourly], '0');
-    $ordinario = $calculator->totals([$painting, $hourly], '22');
+    $forfettario = $calculator->totals($lines, '0');
+    $ordinario = $calculator->totals($lines, '22');
 
     expect($painting->hours)->toBeNull()
-        ->and($hourly->hours)->toBe('5.000')
+        ->and($hourly->amount)->toBe('100.00')
+        ->and($hourly->hours)->toBe('2.000')
+        ->and($free->amount)->toBe('150.00')
         ->and($forfettario->subtotal)->toBe('974.00')
         ->and($forfettario->vatAmount)->toBe('0.00')
         ->and($forfettario->total)->toBe('974.00')
         ->and($forfettario->estimatedCost)->toBe('143.07')
         ->and($forfettario->estimatedMargin)->toBe('830.93')
         ->and($forfettario->estimatedMarginPct)->toBe('85.3')
-        ->and($forfettario->estimatedHours)->toBe('5.000')
+        ->and($forfettario->estimatedHours)->toBe('2.000')
         ->and($ordinario->vatAmount)->toBe('214.28')
         ->and($ordinario->total)->toBe('1188.28');
 });

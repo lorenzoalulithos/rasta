@@ -7,7 +7,7 @@
   {
     "row": 5,
     "name": "Ducoform Lavab.Interni 4lt",
-    "issue": "prezzo a 0 nel foglio"
+    "issue": "prezzo a 0 nel foglio: corretto a € 31,37 (bianco; € 39,21 tinta) dalla Lista_Prezzi_Materiali.odt del socio"
   },
   {
     "row": 6,
@@ -98,5 +98,10 @@
     "row": 73,
     "name": "Rullini Spugna 10cm",
     "issue": "prezzo mancante"
+  },
+  {
+    "row": 23,
+    "name": "Vern. Protettiva Extramarine 2,5lt",
+    "issue": "nome doppio nel foglio (sezione Acqua € 46,62 e Sintetico € 37,26): rinominati (acqua) / (sintetico)"
   }
 ]

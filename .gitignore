@@ -15,3 +15,6 @@
 
 # DDEV generated router certs/config
 .ddev/traefik/
+
+# Documenti originali del socio: dati personali, mai su git
+docs/socio/

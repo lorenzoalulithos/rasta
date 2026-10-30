@@ -77,6 +77,36 @@ return new class extends Migration {
 
                 $table->string('reason', MigrationConstants::MEDIUM_STRING_MAX_LENGTH);
 
+                // The recipient is not always the customer (partner's DDT sample): free fields
+                $table->string('recipient_name')
+                      ->nullable();
+
+                $table->string('recipient_tax_code', MigrationConstants::VAT_LENGTH)
+                      ->nullable();
+
+                $table->string('recipient_vat_number', MigrationConstants::VAT_LENGTH)
+                      ->nullable();
+
+                $table->string('recipient_address')
+                      ->nullable();
+
+                // Luogo di destinazione: the site address unless overridden
+                $table->string('destination_address')
+                      ->nullable();
+
+                // Trasporto a mezzo: sender, carrier or recipient
+                $table->string('transport_by', MigrationConstants::SHORT_STRING_MAX_LENGTH)
+                      ->nullable();
+
+                $table->string('carrier')
+                      ->nullable();
+
+                $table->dateTime('pickup_at')
+                      ->nullable();
+
+                $table->string('sender_signature')
+                      ->nullable();
+
                 $table->string('carrier_signature')
                       ->nullable();
 
@@ -113,7 +143,8 @@ return new class extends Migration {
 
                 $table->string('description');
 
-                $table->string('unit', MigrationConstants::VERY_SHORT_STRING_MAX_LENGTH)
+                // Free text unit, e.g. "Bidoni da 14lt"
+                $table->string('unit', MigrationConstants::SHORT_STRING_MAX_LENGTH)
                       ->nullable();
 
                 // Free text quantity, e.g. "1 e 1/2"
