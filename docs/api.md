@@ -94,7 +94,7 @@ Le righe libere (`job_id` null) non hanno materiali e non entrano nel costo stim
 
 | metodo | route | note |
 |---|---|---|
-| GET | `/dashboard` | `{ to_buy_count, open_quotes: [...5], to_complete: [...] }` in una chiamata |
+| GET | `/dashboard` | `{ data: { to_buy_count, open_quotes: [...5], to_complete: [...] } }` in una chiamata. `to_buy_count` = materiali della lista "da comprare" (`/stock?filter=to_buy`); `open_quotes` = ultimi 5 `draft`/`sent`/`accepted` per numero decrescente; `to_complete` = `accepted` da almeno 14 giorni, il più vecchio prima. I preventivi nel formato della lista (con `customer` e `site`, senza righe) |
 
 ## Formato del calcolo (risposta di lines / calculate / preview-calculate)
 
