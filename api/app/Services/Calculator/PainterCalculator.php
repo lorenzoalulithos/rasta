@@ -73,10 +73,7 @@ final class PainterCalculator implements CalculatorInterface
             }
         }
 
-        $vat = Decimal::round(
-            bcdiv(bcmul($subtotal, Decimal::of($vatRate), Decimal::WORKING_SCALE), '100', Decimal::WORKING_SCALE),
-            Decimal::MONEY,
-        );
+        $vat = $this->vatAmount($subtotal, $vatRate);
         $margin = bcsub($subtotal, $cost, Decimal::MONEY);
 
         return new QuoteTotals(
@@ -89,6 +86,17 @@ final class PainterCalculator implements CalculatorInterface
                 ? Decimal::round(bcdiv(bcmul($margin, '100', Decimal::WORKING_SCALE), $subtotal, Decimal::WORKING_SCALE), self::PERCENT_DECIMALS)
                 : null,
             estimatedHours: $hours,
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function vatAmount(string $subtotal, float|int|string $vatRate): string
+    {
+        return Decimal::round(
+            bcdiv(bcmul($subtotal, Decimal::of($vatRate), Decimal::WORKING_SCALE), '100', Decimal::WORKING_SCALE),
+            Decimal::MONEY,
         );
     }
 

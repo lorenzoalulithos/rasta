@@ -26,4 +26,14 @@ interface CalculatorInterface
      * @return QuoteTotals
      */
     public function totals(array $lines, float|int|string $vatRate): QuoteTotals;
+
+    /**
+     * VAT on a subtotal, rounded to cents.
+     *
+     * @param numeric-string   $subtotal
+     * @param float|int|string $vatRate  e.g. 0 or 22
+     *
+     * @return numeric-string
+     */
+    public function vatAmount(string $subtotal, float|int|string $vatRate): string;
 }

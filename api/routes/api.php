@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\TenantCatalogController;
 use App\Http\Controllers\TenantController;
@@ -32,6 +33,8 @@ Route::middleware('auth:sanctum')->group(static function (): void {
     Route::post('/jobs/reorder', [JobController::class, 'reorder'])->name('jobs.reorder');
     Route::apiResource('jobs', JobController::class);
     Route::apiResource('materials', MaterialController::class);
+
+    Route::apiResource('quotes', QuoteController::class);
 
     Route::apiResource('customers', CustomerController::class);
     Route::get('/customers/{customer}/sites', [SiteController::class, 'index'])->name('customers.sites.index');

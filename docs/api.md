@@ -59,7 +59,7 @@ Il token non scade (la PWA lo tiene finché non si fa logout). Senza token valid
 | GET | `/quotes` | `?status=&search=`; include `customer`, `site`, totali |
 | POST | `/quotes` | `{ site_id }` → crea `draft`, assegna numero, copia vat_rate/footer dal tenant |
 | GET | `/quotes/{id}` | include `lines[]` con `materials[]` (QuoteLineMaterial + material), `customer`, `site`, totali, `estimated_cost`, `estimated_margin` |
-| PATCH | `/quotes/{id}` | `private_notes`, `payment_terms`, `vat_rate`, `issued_at`. Solo in `draft`/`sent` (tranne `private_notes`, sempre) |
+| PATCH | `/quotes/{id}` | `private_notes`, `payment_terms`, `vat_rate`, `issued_at`. Solo in `draft`/`sent` (tranne `private_notes`, sempre; 409 altrimenti). Su un `sent` ogni modifica oltre alle note lo riporta a `draft`. `issued_at` ricalcola `expires_at`, `vat_rate` ricalcola IVA e totale; numero e anno non cambiano |
 | DELETE | `/quotes/{id}` | solo `draft` |
 | POST | `/quotes/{id}/duplicate` | nuovo `draft`, nuovo numero, stesse righe e materiali (ricalcolati con il catalogo attuale) |
 | POST | `/quotes/{id}/lines` | `{ job_id?, description?, quantity, coats?, unit_price?, materials?: [{ material_id, selected, consumption_mode?, consumption_per_unit?, apply_coats? }] }`. Se `job_id`: precompila da `Job` e crea i `QuoteLineMaterial` dai suggeriti. Per un materiale non suggerito dalla lavorazione ("+ Altro materiale") la regola si passa nell'elemento: default `coverage` se il materiale ha resa, altrimenti `consumption_per_unit` è obbligatorio. Risponde con la riga calcolata |

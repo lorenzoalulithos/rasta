@@ -170,6 +170,8 @@ Relazione molti-a-molti con regola di consumo. **È una proposta**: nel preventi
 
 Chiave unica: (`tenant_id`, `year`, `number`).
 
+Il numero viene dalla tabella tecnica `quote_counters` (`tenant_id`, `year`, `last_number`), letta con lock nella stessa transazione che crea il preventivo (§5.1). `number` e `year` non cambiano più, nemmeno se si modifica `issued_at`.
+
 ### 3.9 QuoteLine (Riga preventivo)
 
 | campo | tipo | note |

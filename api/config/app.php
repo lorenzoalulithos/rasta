@@ -64,7 +64,8 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'UTC'),
+    // Italian business: quote dates (issued_at, expires_at) are local days
+    'timezone' => env('APP_TIMEZONE', 'Europe/Rome'),
 
     /*
     |--------------------------------------------------------------------------

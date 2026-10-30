@@ -19,6 +19,19 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * Enum casts, declared for PHPStan (Larastan does not read them from casts()):
  *
  * @property QuoteStatus $status
+ *
+ * Dates and decimals as cast at runtime:
+ *
+ * @property \Illuminate\Support\Carbon      $issued_at
+ * @property \Illuminate\Support\Carbon      $expires_at
+ * @property \Illuminate\Support\Carbon|null $accepted_at
+ * @property \Illuminate\Support\Carbon|null $completed_at
+ * @property string                          $vat_rate
+ * @property string                          $subtotal
+ * @property string                          $vat_amount
+ * @property string                          $total
+ * @property string                          $estimated_cost
+ * @property string                          $estimated_margin
  */
 #[UseFactory(QuoteFactory::class)]
 final class Quote extends Model
