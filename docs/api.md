@@ -84,10 +84,10 @@ Le righe libere (`job_id` null) non hanno materiali e non entrano nel costo stim
 | GET | `/stock` | lista materiali con `on_hand`, `committed`, `available`, `to_buy`, `status` (`ok` \| `low` \| `negative`); `?filter=to_buy&category=&search=`. Per `to_buy` include `commitments[]`. Esclusi attrezzi (`kind = tool`) e materiali archiviati. `negative` = disponibile < 0, `low` = disponibile < `min_stock` |
 | POST | `/stock/{materialId}/adjust` | `{ closed, opened, notes? }` → imposta i valori assoluti, genera movimento `adjustment` con il delta (nessun movimento se non cambia niente). Risponde con la riga di magazzino |
 | PATCH | `/stock/{materialId}` | `{ min_stock }` (scorciatoia su `material.min_stock`) |
-| GET | `/purchases` | `?paid=0\|1` |
-| POST | `/purchases` | `{ supplier?, purchased_at, paid, lines: [{ material_id, packages, unit_cost }], update_prices?: [material_id] }` → movimenti `purchase`; aggiorna `cost_price` solo per i materiali in `update_prices` |
-| GET | `/purchases/{id}` | |
-| PATCH | `/purchases/{id}` | solo `paid`, `notes` |
+| GET | `/purchases` | `?paid=0\|1`, dal più recente, con `lines_count` |
+| POST | `/purchases` | `{ supplier?, purchased_at, paid, notes?, lines: [{ material_id, packages, unit_cost }], update_prices?: [material_id] }` → un movimento `purchase` per riga (`closed_delta = packages`, carica confezioni chiuse); `total` = Σ `packages × unit_cost`; aggiorna `cost_price` solo per i materiali in `update_prices`, che devono essere fra quelli delle righe (422 altrimenti). Niente attrezzi né materiali archiviati. 201 con le righe |
+| GET | `/purchases/{id}` | con `lines[]` (+ `material`) |
+| PATCH | `/purchases/{id}` | solo `paid`, `notes` (gli altri campi sono ignorati: le righe hanno già mosso il magazzino). Nessuna DELETE: un errore si corregge con una rettifica |
 | GET | `/stock/movements` | `?material_id=`, paginato |
 
 ## Home

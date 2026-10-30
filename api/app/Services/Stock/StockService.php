@@ -159,9 +159,8 @@ final class StockService
      */
     public function adjust(Material $material, int $closed, int $opened, ?string $notes = null): ?StockMovement
     {
-        return DB::transaction(static function () use ($material, $closed, $opened, $notes): ?StockMovement {
-            $stock = Stock::query()->whereKey($material->id)->lockForUpdate()->first()
-                ?? Stock::query()->create(['material_id' => $material->id, 'tenant_id' => $material->tenant_id]);
+        return DB::transaction(function () use ($material, $closed, $opened, $notes): ?StockMovement {
+            $stock = $this->lock($material);
 
             $closedDelta = $closed - $stock->closed_packages;
             $openedDelta = $opened - $stock->opened_packages;
@@ -182,5 +181,18 @@ final class StockService
                 'occurred_at' => Carbon::now(),
             ]);
         });
+    }
+
+    /**
+     * The stock row of the material, locked for update and created when missing. Call it inside a transaction.
+     *
+     * @param Material $material
+     *
+     * @return Stock
+     */
+    public function lock(Material $material): Stock
+    {
+        return Stock::query()->whereKey($material->id)->lockForUpdate()->first()
+            ?? Stock::query()->create(['material_id' => $material->id, 'tenant_id' => $material->tenant_id]);
     }
 }

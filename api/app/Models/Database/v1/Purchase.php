@@ -12,6 +12,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Purchase (Acquisto), domain.md §3.13: only a "paid" flag, no due dates.
+ *
+ * Dates and decimals as cast at runtime:
+ *
+ * @property \Illuminate\Support\Carbon $purchased_at
+ * @property string|null                $total
  */
 #[UseFactory(PurchaseFactory::class)]
 final class Purchase extends Model

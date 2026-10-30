@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\QuoteCalculationController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\QuoteLineController;
@@ -42,6 +43,7 @@ Route::middleware('auth:sanctum')->group(static function (): void {
     Route::get('/stock/movements', [StockController::class, 'movements'])->name('stock.movements');
     Route::patch('/stock/{material}', [StockController::class, 'update'])->name('stock.update');
     Route::post('/stock/{material}/adjust', [StockController::class, 'adjust'])->name('stock.adjust');
+    Route::apiResource('purchases', PurchaseController::class)->except('destroy');
 
     Route::apiResource('quotes', QuoteController::class);
     Route::scopeBindings()->group(static function (): void {
