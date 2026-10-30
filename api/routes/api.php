@@ -46,6 +46,7 @@ Route::middleware('auth:sanctum')->group(static function (): void {
     });
     Route::post('/quotes/{quote}/transition', [QuoteStatusController::class, 'transition'])->name('quotes.transition');
     Route::post('/quotes/{quote}/duplicate', [QuoteStatusController::class, 'duplicate'])->name('quotes.duplicate');
+    Route::get('/quotes/{quote}/pdf', [QuoteStatusController::class, 'pdf'])->name('quotes.pdf');
     Route::post('/quotes/{quote}/calculate', [QuoteCalculationController::class, 'calculate'])->name('quotes.calculate');
     Route::post('/quotes/{quote}/preview-calculate', [QuoteCalculationController::class, 'preview'])->name('quotes.preview-calculate');
 

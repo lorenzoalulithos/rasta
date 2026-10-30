@@ -450,5 +450,6 @@ Secondari suggeriti per imbiancatura interna: Fissativo (coverage, apply_coats f
 - [x] Eliminare un materiale usato solo in preventivi chiusi: si **archivia** (`archived_at`), sparisce dal catalogo e dai suggerimenti delle lavorazioni, resta nello storico
 - [x] Righe complete del preventivo Belissi: nel §7.3, dal PDF reale del socio
 - [ ] `estimated_hours_per_unit`: lo popoliamo in v1 o no
+- [ ] `Job.show_on_quote_pdf = false`: cosa vuol dire? Nascondere la riga dal PDF farebbe tornare i totali diversi dalla somma delle righe stampate. Per ora il PDF stampa sempre tutte le righe
 - [ ] Scadenza: il socio scrive "scadrà a tre mesi dalla data di creazione"; noi usiamo `quote_validity_days` (90) e stampiamo la data. Va bene la data precisa?
 - [ ] Prezzi lavorazioni: la tabella "Prezzo Finale" del foglio del socio ha valori diversi dalla tabella lavorazioni usata per il seed (es. Antimacchia 30 € vs 20/50 €, Ringhiere 8/9/10 € per tipo di smalto, Stucco veneziano 70 € vs 50/70 €). Il seed usa la tabella lavorazioni: confermare quale vale

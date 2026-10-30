@@ -6,12 +6,13 @@ use App\Http\Requests\TransitionRequest;
 use App\Http\Resources\QuoteResource;
 use App\Models\Database\v1\Quote;
 use App\Services\Quotes\QuoteDuplicator;
+use App\Services\Quotes\QuotePdf;
 use App\Services\Quotes\QuoteTransitions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 /**
- * Status transitions and duplicate (domain.md §6, api.md "Preventivi").
+ * Status transitions, duplicate and PDF of a quote (domain.md §5.8, §6, api.md "Preventivi").
  */
 final class QuoteStatusController extends Controller
 {
@@ -43,6 +44,22 @@ final class QuoteStatusController extends Controller
         return new QuoteResource(self::withRelations($duplicator->duplicate($quote)))
             ->response()
             ->setStatusCode(Response::HTTP_CREATED);
+    }
+
+    /**
+     * GET /quotes/{id}/pdf: generated on the fly, never cached (flows.md §2.5).
+     *
+     * @param Quote    $quote
+     * @param QuotePdf $pdf
+     *
+     * @return Response
+     */
+    public function pdf(Quote $quote, QuotePdf $pdf): Response
+    {
+        return response($pdf->render($quote), Response::HTTP_OK, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $pdf->filename($quote) . '"',
+        ]);
     }
 
     /**

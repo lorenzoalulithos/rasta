@@ -23,7 +23,7 @@ Prefisso: **A** = api, **F** = app (frontend), **M** = manuale (Lollo).
 - [x] **A2.2** `QuoteNumbering` (progressivo per anno, lock transazionale) + POST/GET/PATCH/DELETE quotes. Test: due creazioni concorrenti non collidono.
 - [x] **A2.3** Righe: POST/PATCH/DELETE/reorder con calcolo e snapshot. `preview-calculate` e `calculate`. Test sui totali del preventivo Belissi (974,00 €).
 - [x] **A2.4** Transizioni di stato (`/transition`) con le regole di `domain.md §6`, duplicate. Test di tutte le transizioni ammesse e di 3 vietate.
-- [ ] **A2.5** PDF con DomPDF: template che riproduce la struttura del preventivo Belissi (intestazione, destinatario/destinazione, righe, totali, footer, scadenza). Fatto quando: il PDF del preventivo di test si apre e i numeri coincidono.
+- [x] **A2.5** PDF con DomPDF: template che riproduce la struttura del preventivo Belissi (intestazione, destinatario/destinazione, righe, totali, footer, scadenza). Fatto quando: il PDF del preventivo di test si apre e i numeri coincidono.
 
 ## Fase 3 – Magazzino
 

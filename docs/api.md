@@ -70,7 +70,7 @@ Il token non scade (la PWA lo tiene finché non si fa logout). Senza token valid
 | POST | `/quotes/{id}/preview-calculate` | **non salva**: riceve `{ lines: [...] }` nel formato di POST lines (più `id?` di una riga esistente, per calcolarla come farebbe il suo PATCH), risponde con `{ data: { lines, totals } }`. Per l'anteprima live nel bottom sheet della riga |
 
 Righe e `calculate` modificano il preventivo solo in `draft`/`sent` (409 altrimenti); su un `sent` le modifiche alle righe lo riportano a `draft`. `calculate` aggiorna solo i costi interni e non cambia lo stato. `preview-calculate` non salva niente e risponde in ogni stato.
-| GET | `/quotes/{id}/pdf` | `application/pdf`, generato al volo. Header `Content-Disposition: inline; filename="Preventivo_1_2026_Belissi.pdf"` |
+| GET | `/quotes/{id}/pdf` | `application/pdf`, generato al volo (DomPDF, font DejaVu Sans in subset, ~25 KB). Header `Content-Disposition: inline; filename="Preventivo_1_2026_Condominio_Belissi.pdf"` (nome del cliente senza spazi né accenti) |
 | POST | `/quotes/{id}/transition` | `{ to: "sent" \| "accepted" \| "rejected" \| "draft" }`. Applica le regole di `domain.md §6`; 409 con `{ message }` se non ammessa. Risponde con `{ data: preventivo, stock_warnings: [] }`; per `accepted` gli avvisi sono i materiali andati sotto scorta: `{ material_id, name, package_label, available, min_stock, to_buy }` |
 | GET | `/quotes/{id}/completion` | proposta di chiusura: per ogni materiale selezionato `{ material, estimated_packages, suggested_closed, suggested_opened }` |
 | POST | `/quotes/{id}/complete` | `{ consumptions: [{ material_id, closed, opened }] }` → movimenti `consumption`, stato `completed` |
