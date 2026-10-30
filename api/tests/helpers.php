@@ -8,6 +8,7 @@ use App\Models\Database\v1\Quote;
 use App\Models\Database\v1\QuoteLine;
 use App\Models\Database\v1\QuoteLineMaterial;
 use App\Models\Database\v1\Site;
+use App\Models\Database\v1\Stock;
 use App\Models\Database\v1\Tenant;
 use App\Models\Database\v1\User;
 use Illuminate\Http\Response;
@@ -27,6 +28,10 @@ const BELISSI_PAINT_LITERS = 40.222;
 const STUCCATURE_HOURS = 2;
 const STUCCATURE_AMOUNT = 100;
 const PORTONE_PRICE = 150;
+
+// Chiusura cantiere (QuoteCompletionTest): Tempera 5 + 0 in stock, Stucco estimated 1,4 packages
+const COMPLETION_TEMPERA_CLOSED_BEFORE = 5;
+const COMPLETION_STUCCO_ESTIMATED = 1.4;
 
 /**
  * Authenticates a new user of a new tenant with a Sanctum token and returns the tenant.
@@ -114,4 +119,26 @@ function belissiQuote(): Quote
     $quote->forceFill(['private_notes' => 'Chiavi dal portinaio'])->save();
 
     return $quote;
+}
+
+/**
+ * Accepted quote with Tempera (3 packages) and Stucco (1,4), plus an unselected Fissativo.
+ *
+ * @param Tenant $tenant
+ *
+ * @return array{0: Quote, 1: Material, 2: Material}
+ */
+function acceptedSite(Tenant $tenant): array
+{
+    $tempera = Material::factory()->for($tenant)->create(['name' => 'Tempera Wallcream']);
+    Stock::factory()->for($tenant)->for($tempera)->create(['closed_packages' => COMPLETION_TEMPERA_CLOSED_BEFORE]);
+    $quote = quoteUsing($tenant, $tempera, QuoteStatus::Accepted);
+
+    $stucco = Material::factory()->for($tenant)->create(['name' => 'Stucco gesso']);
+    $line = QuoteLine::factory()->for($tenant)->for($quote)->create();
+    QuoteLineMaterial::factory()->for($tenant)->for($line, 'line')->for($stucco)->create(['required_packages' => COMPLETION_STUCCO_ESTIMATED]);
+    $fissativo = Material::factory()->for($tenant)->create(['name' => 'Fissativo Idrofis']);
+    QuoteLineMaterial::factory()->for($tenant)->for($line, 'line')->for($fissativo)->create(['selected' => false]);
+
+    return [$quote, $tempera, $stucco];
 }

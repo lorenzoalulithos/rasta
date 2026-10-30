@@ -6,6 +6,7 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\QuoteCalculationController;
+use App\Http\Controllers\QuoteCompletionController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\QuoteLineController;
 use App\Http\Controllers\QuoteStatusController;
@@ -57,6 +58,8 @@ Route::middleware('auth:sanctum')->group(static function (): void {
     Route::get('/quotes/{quote}/pdf', [QuoteStatusController::class, 'pdf'])->name('quotes.pdf');
     Route::post('/quotes/{quote}/calculate', [QuoteCalculationController::class, 'calculate'])->name('quotes.calculate');
     Route::post('/quotes/{quote}/preview-calculate', [QuoteCalculationController::class, 'preview'])->name('quotes.preview-calculate');
+    Route::get('/quotes/{quote}/completion', [QuoteCompletionController::class, 'show'])->name('quotes.completion');
+    Route::post('/quotes/{quote}/complete', [QuoteCompletionController::class, 'complete'])->name('quotes.complete');
 
     Route::apiResource('customers', CustomerController::class);
     Route::get('/customers/{customer}/sites', [SiteController::class, 'index'])->name('customers.sites.index');

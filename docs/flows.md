@@ -216,7 +216,7 @@ Tempera Wallcream · bidone 14 lt
 Previsto: 3 bidoni
 Usato:   [ 2 ] chiuse   [ 1 ] aperta
 ```
-Stepper precompilati con la stima (3 chiuse → l'utente corregge in 2 + 1 aperta). Sotto, materiali non previsti: "+ Altro materiale usato".
+Stepper precompilati con la stima (3 chiuse → l'utente corregge in 2 + 1 aperta). "Aperta" = confezione iniziata che torna in magazzino mezza piena (domain.md §5 regola 10). Sotto, materiali non previsti: "+ Altro materiale usato".
 
 Bottone **Chiudi cantiere** → dialog di conferma con riepilogo → `StockMovement` tipo `consumption` per ogni riga, stato `completed`, toast "Cantiere chiuso, magazzino aggiornato".
 

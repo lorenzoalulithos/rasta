@@ -290,6 +290,9 @@ Purchase 1─n PurchaseLine n─1 Material
    - a piè di pagina: "Pag. 1" e "Vi preghiamo di controllare i Vs. dati anagrafici e la Partita IVA. Non ci riteniamo responsabili di eventuali errori."
 9. **Impegnato**: solo preventivi `accepted`. `draft`, `sent`, `rejected`, `completed` non impegnano.
 10. **Scarico**: alla chiusura (`completed`) l'app propone per ogni materiale selezionato il consumo stimato in confezioni (chiuse/aperte); l'utente conferma o corregge; si creano `StockMovement` di tipo `consumption` e la giacenza scende. L'impegnato di quel preventivo si azzera automaticamente perché lo stato non è più `accepted`.
+    - "Usato X chiuse + Y aperte" vuol dire: ha preso X + Y confezioni dal magazzino, X le ha finite, Y le ha iniziate e tornano in magazzino come aperte. Movimento `consumption`: `closed_delta = −(X + Y)`, `opened_delta = +Y`. Esempio: magazzino 5 + 0, usato 2 + 1 → movimento −3 / +1 → magazzino 2 + 1.
+    - Proposta per materiale (somma delle righe del preventivo): stima intera `n` → `n` chiuse + 0 aperte; stima frazionaria `n,x` → `n` chiuse + 1 aperta.
+    - Se le chiuse andrebbero sotto zero (ha usato più di quanto risultava), le chiuse si fermano a 0 e la differenza si registra come movimento `adjustment` subito dopo il consumo ("rettifica implicita", flows.md §6): la giacenza resta ricalcolabile dai movimenti.
 11. **Lista da comprare**: tutti i materiali con `available < min_stock`, mostrando quantità e i cantieri (preventivi accettati) che li richiedono.
 
 ---
