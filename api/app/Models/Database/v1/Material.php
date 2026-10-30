@@ -18,6 +18,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Material (Materiale), domain.md §3.5.
+ *
+ * Enum casts, declared for PHPStan (Larastan does not read them from casts()):
+ *
+ * @property MaterialCategory $category
+ * @property MaterialKind $kind
+ * @property BaseUnit $base_unit
  */
 #[UseFactory(MaterialFactory::class)]
 final class Material extends Model

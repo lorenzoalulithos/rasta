@@ -13,6 +13,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Job (Lavorazione), domain.md §3.6: a service sold in quotes. Not a queue job.
+ *
+ * Enum casts, declared for PHPStan (Larastan does not read them from casts()):
+ *
+ * @property JobUnit $unit
  */
 #[UseFactory(JobFactory::class)]
 final class Job extends Model

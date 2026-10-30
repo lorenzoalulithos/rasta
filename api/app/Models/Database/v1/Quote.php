@@ -15,6 +15,10 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * Quote (Preventivo), domain.md §3.8: numbered per tenant and year.
+ *
+ * Enum casts, declared for PHPStan (Larastan does not read them from casts()):
+ *
+ * @property QuoteStatus $status
  */
 #[UseFactory(QuoteFactory::class)]
 final class Quote extends Model

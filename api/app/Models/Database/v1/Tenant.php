@@ -15,6 +15,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Tenant (Azienda), domain.md §3.1.
+ *
+ * Enum casts, declared for PHPStan (Larastan does not read them from casts()):
+ *
+ * @property TaxRegime $tax_regime
+ * @property CoverageStrategy $coverage_strategy
+ * @property PackageRounding $package_rounding
+ * @property Trade $trade
  */
 #[UseFactory(TenantFactory::class)]
 final class Tenant extends Model

@@ -13,6 +13,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * StockMovement (Movimento di magazzino), domain.md §3.12: every stock change goes through here.
+ *
+ * Enum casts, declared for PHPStan (Larastan does not read them from casts()):
+ *
+ * @property StockMovementType $type
  */
 #[UseFactory(StockMovementFactory::class)]
 final class StockMovement extends Model

@@ -14,6 +14,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * JobMaterial (Materiale suggerito per lavorazione), domain.md §3.7: a proposal, not a fixed bill of materials.
+ *
+ * Enum casts, declared for PHPStan (Larastan does not read them from casts()):
+ *
+ * @property JobMaterialRole $role
+ * @property ConsumptionMode $consumption_mode
  */
 #[UseFactory(JobMaterialFactory::class)]
 final class JobMaterial extends Model

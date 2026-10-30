@@ -19,7 +19,7 @@ Prefisso: **A** = api, **F** = app (frontend), **M** = manuale (Lollo).
 
 ## Fase 2 – Calcolatore e preventivi
 
-- [ ] **A2.1** `PainterCalculator` + `CalculatorInterface`. Solo servizio, nessun endpoint. Fatto quando: test Pest che riproducono `domain.md §7.3` (181 mq, 2 mani, resa avg → 3 bidoni, 143,07 €) e le varianti `min`/`max`/`fractional`, `per_unit`, `apply_coats = false`.
+- [x] **A2.1** `PainterCalculator` + `CalculatorInterface`. Solo servizio, nessun endpoint. Fatto quando: test Pest che riproducono `domain.md §7.3` (181 mq, 2 mani, resa avg → 3 bidoni, 143,07 €) e le varianti `min`/`max`/`fractional`, `per_unit`, `apply_coats = false`.
 - [ ] **A2.2** `QuoteNumbering` (progressivo per anno, lock transazionale) + POST/GET/PATCH/DELETE quotes. Test: due creazioni concorrenti non collidono.
 - [ ] **A2.3** Righe: POST/PATCH/DELETE/reorder con calcolo e snapshot. `preview-calculate` e `calculate`. Test sui totali del preventivo Belissi (974,00 €).
 - [ ] **A2.4** Transizioni di stato (`/transition`) con le regole di `domain.md §6`, duplicate. Test di tutte le transizioni ammesse e di 3 vietate.

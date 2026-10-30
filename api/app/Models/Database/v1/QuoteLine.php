@@ -14,6 +14,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * QuoteLine (Riga preventivo), domain.md §3.9: `job_id` null for free lines.
+ *
+ * Enum casts, declared for PHPStan (Larastan does not read them from casts()):
+ *
+ * @property JobUnit $unit
  */
 #[UseFactory(QuoteLineFactory::class)]
 final class QuoteLine extends Model

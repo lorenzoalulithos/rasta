@@ -14,6 +14,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * QuoteLineMaterial, domain.md §3.10: snapshot of the requirement computed for a line.
+ *
+ * Enum casts, declared for PHPStan (Larastan does not read them from casts()):
+ *
+ * @property JobMaterialRole $role
+ * @property ConsumptionMode $consumption_mode
  */
 #[UseFactory(QuoteLineMaterialFactory::class)]
 final class QuoteLineMaterial extends Model
