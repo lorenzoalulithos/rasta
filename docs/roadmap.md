@@ -27,7 +27,7 @@ Prefisso: **A** = api, **F** = app (frontend), **M** = manuale (Lollo).
 
 ## Fase 3 – Magazzino
 
-- [ ] **A3.1** `StockService`: on_hand/committed/available/to_buy, `GET /stock`, adjust, movimenti. Test: preventivo `accepted` impegna, `rejected`/`completed` no.
+- [x] **A3.1** `StockService`: on_hand/committed/available/to_buy, `GET /stock`, adjust, movimenti. Test: preventivo `accepted` impegna, `rejected`/`completed` no.
 - [ ] **A3.2** Acquisti: POST/GET/PATCH con movimenti e aggiornamento prezzi opzionale.
 - [ ] **A3.3** Chiusura cantiere: `GET /completion` + `POST /complete`. Test: la giacenza scende, l'impegnato sparisce.
 - [ ] **A3.4** `GET /dashboard`.

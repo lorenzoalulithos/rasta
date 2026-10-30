@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Enums\QuoteStatus;
 use App\Http\Requests\MaterialRequest;
 use App\Http\Resources\MaterialResource;
+use App\Http\Resources\StockMovementResource;
 use App\Models\Database\v1\Material;
-use App\Models\Database\v1\QuoteLineMaterial;
 use App\Models\Database\v1\Stock;
-use App\Models\Database\v1\StockMovement;
+use App\Services\Stock\StockService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -81,53 +81,24 @@ final class MaterialController extends Controller
     /**
      * With stock, commitments (accepted quotes and packages) and the latest movements.
      *
-     * @param Request  $request
-     * @param Material $material
+     * @param Request      $request
+     * @param Material     $material
+     * @param StockService $stock
      *
      * @return JsonResponse
      */
-    public function show(Request $request, Material $material): JsonResponse
+    public function show(Request $request, Material $material, StockService $stock): JsonResponse
     {
-        $commitments = $material->commitments()
-                                ->with('line.quote.site.customer')
-                                ->get()
-                                ->groupBy(static fn (QuoteLineMaterial $item): string => (string) $item->line?->quote_id)
-                                ->map(static function ($items): array {
-                                    $quote = $items->firstOrFail()->line?->quote;
-
-                                    return [
-                                        'quote' => [
-                                            'id' => $quote?->id,
-                                            'number' => $quote?->number,
-                                            'year' => $quote?->year,
-                                            'customer' => $quote?->site?->customer?->name,
-                                            'site' => $quote?->site?->name,
-                                        ],
-                                        'packages' => (float) $items->sum(static fn (QuoteLineMaterial $item): float => (float) $item->required_packages),
-                                    ];
-                                })
-                                ->values();
-
         $movements = $material->stockMovements()
                               ->latest('occurred_at')
                               ->limit(self::LATEST_MOVEMENTS)
-                              ->get()
-                              ->map(static fn (StockMovement $movement): array => [
-                                  'id' => $movement->id,
-                                  'type' => $movement->type,
-                                  'closed_delta' => $movement->closed_delta,
-                                  'opened_delta' => $movement->opened_delta,
-                                  'quote_id' => $movement->quote_id,
-                                  'purchase_id' => $movement->purchase_id,
-                                  'notes' => $movement->notes,
-                                  'occurred_at' => $movement->occurred_at,
-                              ]);
+                              ->get();
 
         return response()->json([
             'data' => [
                 ...new MaterialResource(self::withStock($material))->resolve($request),
-                'commitments' => $commitments,
-                'movements' => $movements,
+                'commitments' => $stock->commitments($material),
+                'movements' => StockMovementResource::collection($movements)->resolve($request),
             ],
         ]);
     }

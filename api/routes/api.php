@@ -9,6 +9,7 @@ use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\QuoteLineController;
 use App\Http\Controllers\QuoteStatusController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\TenantCatalogController;
 use App\Http\Controllers\TenantController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,11 @@ Route::middleware('auth:sanctum')->group(static function (): void {
     Route::post('/jobs/reorder', [JobController::class, 'reorder'])->name('jobs.reorder');
     Route::apiResource('jobs', JobController::class);
     Route::apiResource('materials', MaterialController::class);
+
+    Route::get('/stock', [StockController::class, 'index'])->name('stock.index');
+    Route::get('/stock/movements', [StockController::class, 'movements'])->name('stock.movements');
+    Route::patch('/stock/{material}', [StockController::class, 'update'])->name('stock.update');
+    Route::post('/stock/{material}/adjust', [StockController::class, 'adjust'])->name('stock.adjust');
 
     Route::apiResource('quotes', QuoteController::class);
     Route::scopeBindings()->group(static function (): void {
