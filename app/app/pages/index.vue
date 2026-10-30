@@ -30,5 +30,7 @@ const today = date.charAt(0).toUpperCase() + date.slice(1)
                 Qui troverai i preventivi aperti, cosa comprare e i cantieri da chiudere.
             </p>
         </div>
+
+        <AppFab />
     </section>
 </template>

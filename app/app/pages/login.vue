@@ -92,6 +92,8 @@ function loginError(error: unknown): string {
                 <UForm
                     :schema="schema"
                     :state="state"
+                    :validate-on="['input']"
+                    novalidate
                     class="flex flex-col gap-5"
                     @submit="onSubmit"
                 >
