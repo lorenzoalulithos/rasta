@@ -9,6 +9,7 @@ export default defineNuxtConfig({
         '@nuxt/ui',
         '@nuxt/eslint',
         '@pinia/nuxt',
+        '@vite-pwa/nuxt',
     ],
 
     css: ['~/assets/css/main.css'],
@@ -16,7 +17,12 @@ export default defineNuxtConfig({
     app: {
         head: {
             htmlAttrs: { lang: 'it' },
-            title: 'App Artigiani',
+            title: 'duemani',
+            meta: [
+                { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
+                { name: 'theme-color', content: '#17181C' },
+                { name: 'description', content: 'Preventivi e magazzino per chi lavora con le mani' },
+            ],
         },
     },
 
@@ -24,8 +30,69 @@ export default defineNuxtConfig({
         colorMode: false,
     },
 
+    // Font scaricati in build e serviti dall'app: niente richieste a Google a runtime
+    fonts: {
+        defaults: {
+            weights: [400, 500, 600, 700, 800],
+        },
+        families: [
+            { name: 'Plus Jakarta Sans', provider: 'google' },
+            { name: 'Bricolage Grotesque', provider: 'google', weights: [600, 800] },
+        ],
+    },
+
     icon: {
         serverBundle: 'local',
+        clientBundle: {
+            scan: true,
+        },
+    },
+
+    // docs/stack.md "PWA": NetworkFirst per le API, CacheFirst per gli asset
+    pwa: {
+        registerType: 'autoUpdate',
+        pwaAssets: {
+            config: true,
+        },
+        manifest: {
+            name: 'duemani',
+            short_name: 'duemani',
+            description: 'Preventivi e magazzino per chi lavora con le mani',
+            lang: 'it',
+            start_url: '/',
+            display: 'standalone',
+            orientation: 'portrait',
+            theme_color: '#17181C',
+            background_color: '#EFEEEA',
+        },
+        workbox: {
+            navigateFallback: '/',
+            globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+            runtimeCaching: [
+                {
+                    urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
+                    handler: 'NetworkFirst',
+                    options: {
+                        cacheName: 'api',
+                        networkTimeoutSeconds: 5,
+                    },
+                },
+                {
+                    urlPattern: ({ request }) => ['font', 'image', 'style', 'script'].includes(request.destination),
+                    handler: 'CacheFirst',
+                    options: {
+                        cacheName: 'assets',
+                        expiration: { maxEntries: 200 },
+                    },
+                },
+            ],
+        },
+        client: {
+            installPrompt: true,
+        },
+        devOptions: {
+            enabled: false,
+        },
     },
 
     devtools: {

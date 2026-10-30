@@ -1,73 +1,34 @@
 <script setup lang="ts">
-// M0.2: verifica che la PWA raggiunga le API (CORS compreso)
-interface Ping {
-    data: {
-        status: string
-        app: string
-        time: string
-    }
-}
+// Home (docs/flows.md §1): i tre blocchi arrivano con F5.5, qui solo il saluto
+useHead({ title: 'duemani' })
 
-const config = useRuntimeConfig()
+const auth = useAuthStore()
 
-const { data, error, status, refresh } = await useFetch<Ping>('/ping', {
-    baseURL: config.public.apiBase,
-    server: false,
-})
+const firstName = computed(() => auth.user?.name.split(' ')[0] ?? '')
+const date = new Intl.DateTimeFormat('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date())
+// "Venerdì 30 ottobre": maiuscola solo all'inizio
+const today = date.charAt(0).toUpperCase() + date.slice(1)
 </script>
 
 <template>
-    <UContainer class="py-10 max-w-lg">
-        <h1 class="text-2xl font-bold mb-6">
-            App Artigiani
-        </h1>
+    <section class="flex flex-col gap-6">
+        <div class="flex flex-col gap-1">
+            <span class="text-base font-semibold text-cemento-700">{{ today }}</span>
+            <h1 class="font-display text-4xl font-extrabold tracking-tight text-cemento-900">
+                Ciao{{ firstName ? ` ${firstName}` : '' }}
+            </h1>
+        </div>
 
-        <UCard>
-            <template #header>
-                <div class="flex items-center justify-between gap-3">
-                    <span class="font-semibold">Collegamento API</span>
-                    <UBadge
-                        v-if="status === 'pending'"
-                        color="neutral"
-                        variant="subtle"
-                        label="Controllo…"
-                    />
-                    <UBadge
-                        v-else-if="error"
-                        color="error"
-                        variant="subtle"
-                        label="Non raggiungibile"
-                    />
-                    <UBadge
-                        v-else
-                        color="success"
-                        variant="subtle"
-                        label="Ok"
-                    />
-                </div>
-            </template>
-
-            <p
-                v-if="error"
-                class="text-sm"
-            >
-                Non riesco a contattare <code>{{ config.public.apiBase }}</code>. DDEV è acceso?
-            </p>
-            <pre
-                v-else-if="data"
-                class="text-sm whitespace-pre-wrap"
-            >{{ data }}</pre>
-
-            <template #footer>
-                <UButton
-                    icon="i-lucide-refresh-cw"
-                    label="Riprova"
-                    size="lg"
-                    block
-                    :loading="status === 'pending'"
-                    @click="refresh()"
+        <div class="flex flex-col items-center gap-3 rounded-3xl bg-white px-6 py-12 text-center">
+            <span class="flex size-14 items-center justify-center rounded-2xl bg-cemento-900 text-primary">
+                <UIcon
+                    name="i-lucide-paintbrush"
+                    class="size-7"
                 />
-            </template>
-        </UCard>
-    </UContainer>
+            </span>
+            <p class="max-w-sm text-base text-cemento-700">
+                Qui troverai i preventivi aperti, cosa comprare e i cantieri da chiudere.
+            </p>
+        </div>
+    </section>
 </template>

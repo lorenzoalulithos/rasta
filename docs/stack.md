@@ -36,7 +36,7 @@ app-artigiani/
 
 - **Nuxt 4** in modalità SPA: `ssr: false`. Deploy come statico (`nuxt generate`). Node 24 (`.nvmrc`).
 - **Nuxt UI 4** (incluso Tailwind 4). Nessun'altra UI library. Icone via `@nuxt/icon` con set Lucide.
-- **PWA**: `@vite-pwa/nuxt`. Manifest, `display: standalone`, workbox con `NetworkFirst` per `/api/*` e `CacheFirst` per asset.
+- **PWA**: `@vite-pwa/nuxt`. Manifest, `display: standalone`, workbox con `NetworkFirst` per `/api/*` e `CacheFirst` per asset. Il service worker c'è solo nella build (`npm run generate`), non in `npm run dev`. L'hosting statico serve le route con la barra finale (`/login/`): i confronti di path passano da `normalizePath()`.
 - **State**: Pinia solo per auth e per il preventivo in editing. Il resto è fetch diretto con `useFetch`/`$fetch` via un composable `useApi()` che aggiunge base URL e Bearer.
 - **Form**: `UForm` di Nuxt UI con schema **Zod**.
 - **Tipi**: i tipi delle risorse API vivono in `app/types/api.ts`, scritti a mano a partire da `docs/api.md`. Si aggiornano insieme alle API Resource lato Laravel. (Se diventa pesante: generazione da OpenAPI, non ora.)
@@ -44,6 +44,16 @@ app-artigiani/
 - **i18n**: no. UI in italiano hardcoded. I nomi di campo nel codice restano in inglese.
 - **Test**: Vitest solo per composable e utility di calcolo (se si replica il calcolatore client-side per l'anteprima live). Niente e2e in v1.
 - **Lint**: `@nuxt/eslint`, config di default.
+
+## Brand
+
+Nome **duemani** (marchio e domini ancora da verificare), direzione B "cantiere", scelta il 30/10/2026:
+
+- Colori: **ocra** `#E8A317` (bottoni principali, voce attiva), **nero** `#17181C` (testi, barre di navigazione), **cemento** `#EFEEEA` (sfondo). In Nuxt UI: `primary = ocra`, `neutral = cemento`, scale in `app/app/assets/css/main.css`.
+- L'ocra sul chiaro è sempre un **fondo con testo nero**, mai testo ocra su chiaro (contrasto insufficiente). Testo ocra solo sul nero.
+- Font: **Bricolage Grotesque** (titoli, logo; classe `font-display`) e **Plus Jakarta Sans** (tutto il resto). Scaricati in build da `@nuxt/fonts`, nessuna richiesta a Google a runtime.
+- Marchio: due pennellate inclinate (`AppLogo.vue`); icone PWA generate da `app/public/pwa-icon.svg` con `@vite-pwa/assets-generator` (`app/pwa-assets.config.ts`).
+- Bottoni `lg` e campi `xl` di default (`app.config.ts`): si usano con una mano.
 
 ## Ambiente locale
 
