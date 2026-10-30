@@ -18,6 +18,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * Enum casts, declared for PHPStan (Larastan does not read them from casts()):
  *
  * @property JobUnit $unit
+ *
+ * Decimals as cast at runtime:
+ *
+ * @property string $quantity
+ * @property string $unit_price
+ * @property string $amount
  */
 #[UseFactory(QuoteLineFactory::class)]
 final class QuoteLine extends Model
@@ -64,7 +70,7 @@ final class QuoteLine extends Model
      */
     public function materials(): HasMany
     {
-        return $this->hasMany(QuoteLineMaterial::class);
+        return $this->hasMany(QuoteLineMaterial::class)->orderBy('sort_order');
     }
 
     /**

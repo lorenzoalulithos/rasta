@@ -172,7 +172,7 @@ final class QuoteController extends Controller
      */
     private static function withRelations(Quote $quote): Quote
     {
-        return $quote->refresh()->load(['site.customer', 'lines.materials.material']);
+        return $quote->refresh()->load(['site.customer', 'lines.materials.material', 'lines.job']);
     }
 
     /**

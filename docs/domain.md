@@ -203,6 +203,7 @@ I materiali effettivamente selezionati per quella riga, con il fabbisogno calcol
 | required_packages | decimal(10,3) | confezioni, arrotondate secondo `package_rounding`. 3 decimali: con `fractional` lo snapshot deve ridare lo stesso costo del calcolo |
 | unit_cost | decimal | `cost_price` del materiale al momento del calcolo |
 | estimated_cost | decimal | `required_packages * unit_cost` |
+| sort_order | int | ordine nella riga: quello dei suggeriti della lavorazione, poi i materiali aggiunti a mano |
 
 ### 3.11 Stock (Giacenza)
 Una riga per materiale.

@@ -19,6 +19,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property JobMaterialRole $role
  * @property ConsumptionMode $consumption_mode
+ *
+ * Decimals as cast at runtime:
+ *
+ * @property string|null $coverage_used
+ * @property string|null $consumption_per_unit
+ * @property string      $required_quantity
+ * @property string      $required_packages
+ * @property string      $unit_cost
+ * @property string      $estimated_cost
  */
 #[UseFactory(QuoteLineMaterialFactory::class)]
 final class QuoteLineMaterial extends Model
@@ -45,6 +54,7 @@ final class QuoteLineMaterial extends Model
         'required_packages',
         'unit_cost',
         'estimated_cost',
+        'sort_order',
     ];
 
     /**
@@ -79,6 +89,7 @@ final class QuoteLineMaterial extends Model
             'required_packages' => 'decimal:3',
             'unit_cost' => 'decimal:2',
             'estimated_cost' => 'decimal:2',
+            'sort_order' => 'integer',
         ];
     }
 }

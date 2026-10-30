@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\Database\v1\Quote;
 use App\Services\Calculator\Decimal;
+use App\Services\Quotes\QuoteLines;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -48,7 +49,7 @@ final class QuoteResource extends JsonResource
             'estimated_cost' => (float) $this->estimated_cost,
             'estimated_margin' => (float) $this->estimated_margin,
             'estimated_margin_pct' => $this->marginPct(),
-            'estimated_hours' => null,
+            'estimated_hours' => $this->whenLoaded('lines', fn (): ?float => $this->hours(), null),
             'accepted_at' => $this->accepted_at?->toIso8601String(),
             'completed_at' => $this->completed_at?->toIso8601String(),
             'site' => $this->whenLoaded('site', fn (): SiteResource => new SiteResource($this->site)),
@@ -59,6 +60,26 @@ final class QuoteResource extends JsonResource
             'lines' => QuoteLineResource::collection($this->whenLoaded('lines')),
             'created_at' => $this->created_at?->toIso8601String(),
         ];
+    }
+
+    /**
+     * Sum of the line hours (domain.md §7.4), null when no line has them.
+     *
+     * @return float|null
+     */
+    private function hours(): ?float
+    {
+        $hours = null;
+
+        foreach ($this->lines as $line) {
+            $lineHours = QuoteLines::hours($line);
+
+            if (null !== $lineHours) {
+                $hours = bcadd($hours ?? '0', Decimal::of($lineHours), Decimal::QUANTITY);
+            }
+        }
+
+        return null === $hours ? null : (float) $hours;
     }
 
     /**

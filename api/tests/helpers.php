@@ -1,13 +1,17 @@
 <?php declare(strict_types=1);
 
 use App\Enums\QuoteStatus;
+use App\Models\Database\v1\Job;
 use App\Models\Database\v1\Material;
 use App\Models\Database\v1\Quote;
 use App\Models\Database\v1\QuoteLine;
 use App\Models\Database\v1\QuoteLineMaterial;
+use App\Models\Database\v1\Site;
 use App\Models\Database\v1\Tenant;
 use App\Models\Database\v1\User;
+use Illuminate\Http\Response;
 use Laravel\Sanctum\Sanctum;
+use function Pest\Laravel\postJson;
 
 /**
  * Authenticates a new user of a new tenant with a Sanctum token and returns the tenant.
@@ -42,4 +46,29 @@ function quoteUsing(Tenant $tenant, Material $material, QuoteStatus $status): Qu
     QuoteLineMaterial::factory()->for($tenant)->for($line, 'line')->for($material)->create();
 
     return $quote;
+}
+
+/**
+ * Tenant with the seed catalog and an empty draft for Condominio Belissi.
+ *
+ * @return array{0: Tenant, 1: Quote}
+ */
+function belissiDraft(): array
+{
+    $tenant = signInTenant();
+    postJson('/api/tenant/seed-catalog')->assertStatus(Response::HTTP_CREATED);
+    $site = Site::factory()->for($tenant)->create(['name' => 'Vano scala']);
+    $quote = Quote::query()->whereKey((string) postJson('/api/quotes', ['site_id' => $site->id])->json('data.id'))->firstOrFail();
+
+    return [$tenant, $quote];
+}
+
+/**
+ * @param string $name
+ *
+ * @return Job
+ */
+function seedJob(string $name): Job
+{
+    return Job::query()->where('name', $name)->firstOrFail();
 }

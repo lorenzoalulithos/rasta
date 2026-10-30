@@ -166,6 +166,9 @@ return new class extends Migration {
 
                 $table->decimal('estimated_cost', MigrationConstants::DECIMAL_PRECISION, MigrationConstants::MONEY_SCALE);
 
+                $table->unsignedInteger('sort_order')
+                      ->default(0);
+
                 $table->timestamps();
             }
         );

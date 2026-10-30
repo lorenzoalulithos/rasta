@@ -4,7 +4,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\QuoteCalculationController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\QuoteLineController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\TenantCatalogController;
 use App\Http\Controllers\TenantController;
@@ -35,6 +37,14 @@ Route::middleware('auth:sanctum')->group(static function (): void {
     Route::apiResource('materials', MaterialController::class);
 
     Route::apiResource('quotes', QuoteController::class);
+    Route::scopeBindings()->group(static function (): void {
+        Route::post('/quotes/{quote}/lines/reorder', [QuoteLineController::class, 'reorder'])->name('quotes.lines.reorder');
+        Route::post('/quotes/{quote}/lines', [QuoteLineController::class, 'store'])->name('quotes.lines.store');
+        Route::patch('/quotes/{quote}/lines/{line}', [QuoteLineController::class, 'update'])->name('quotes.lines.update');
+        Route::delete('/quotes/{quote}/lines/{line}', [QuoteLineController::class, 'destroy'])->name('quotes.lines.destroy');
+    });
+    Route::post('/quotes/{quote}/calculate', [QuoteCalculationController::class, 'calculate'])->name('quotes.calculate');
+    Route::post('/quotes/{quote}/preview-calculate', [QuoteCalculationController::class, 'preview'])->name('quotes.preview-calculate');
 
     Route::apiResource('customers', CustomerController::class);
     Route::get('/customers/{customer}/sites', [SiteController::class, 'index'])->name('customers.sites.index');
