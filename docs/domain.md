@@ -308,6 +308,20 @@ draft ──► sent ──► accepted ──► completed
 - `completed`: chiuso con consumi confermati. Sola lettura.
 - `rejected`: sola lettura. Riapribile a `draft` come copia (nuovo numero).
 
+Transizioni ammesse da `POST /quotes/{id}/transition` (tutte le altre: 409):
+
+| da | a | effetto |
+|---|---|---|
+| `draft` | `sent` | serve almeno una riga |
+| `draft` | `rejected` | |
+| `sent` | `accepted` | `accepted_at`; impegna il magazzino; avvisa dei materiali che vanno sotto scorta |
+| `sent` | `rejected` | |
+| `sent` | `draft` | "torna in bozza" |
+
+- Un `draft` non si accetta direttamente: prima si segna inviato.
+- `accepted` → `completed` passa solo dalla chiusura cantiere (`/complete`, A3.3).
+- `rejected` → `draft` non è una transizione: si **duplica** (nuovo numero, righe ricalcolate col catalogo attuale). Duplica funziona da qualsiasi stato.
+
 ---
 
 ## 7. Calcolatore (modulo Pittori)

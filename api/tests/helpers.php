@@ -13,6 +13,19 @@ use Illuminate\Http\Response;
 use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\postJson;
 
+// Belissi, domain.md §7.3
+const BELISSI_SQM = 181;
+const BELISSI_TOTAL = 974;
+const BELISSI_COST = 143.07;
+const BELISSI_MARGIN = 830.93;
+const BELISSI_MARGIN_PCT = 85.3;
+const BELISSI_PAINT_AMOUNT = 724;
+const BELISSI_PAINT_PACKAGES = 3;
+const BELISSI_PAINT_LITERS = 40.222;
+const STUCCATURE_HOURS = 2;
+const STUCCATURE_AMOUNT = 100;
+const PORTONE_PRICE = 150;
+
 /**
  * Authenticates a new user of a new tenant with a Sanctum token and returns the tenant.
  *

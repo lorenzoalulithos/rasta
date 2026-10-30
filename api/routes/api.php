@@ -7,6 +7,7 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\QuoteCalculationController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\QuoteLineController;
+use App\Http\Controllers\QuoteStatusController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\TenantCatalogController;
 use App\Http\Controllers\TenantController;
@@ -43,6 +44,8 @@ Route::middleware('auth:sanctum')->group(static function (): void {
         Route::patch('/quotes/{quote}/lines/{line}', [QuoteLineController::class, 'update'])->name('quotes.lines.update');
         Route::delete('/quotes/{quote}/lines/{line}', [QuoteLineController::class, 'destroy'])->name('quotes.lines.destroy');
     });
+    Route::post('/quotes/{quote}/transition', [QuoteStatusController::class, 'transition'])->name('quotes.transition');
+    Route::post('/quotes/{quote}/duplicate', [QuoteStatusController::class, 'duplicate'])->name('quotes.duplicate');
     Route::post('/quotes/{quote}/calculate', [QuoteCalculationController::class, 'calculate'])->name('quotes.calculate');
     Route::post('/quotes/{quote}/preview-calculate', [QuoteCalculationController::class, 'preview'])->name('quotes.preview-calculate');
 
