@@ -223,7 +223,8 @@ export interface Job {
     name: string
     unit: JobUnit
     unit_price: number
-    default_coats: number
+    /** null = la lavorazione non va a mani */
+    default_coats: number | null
     avg_time_notes: string | null
     estimated_hours_per_unit: number | null
     show_on_quote_pdf: boolean

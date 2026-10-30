@@ -17,3 +17,18 @@ export function formatDate(value: string | null | undefined): string {
 
     return shortDate.format(date)
 }
+
+/** "181", "4,50", "4.50" → numero; null se non è un numero. Si scrive con la virgola, come sul telefono. */
+export function parseNumber(value: string | number | null | undefined): number | null {
+    if (typeof value === 'number') {
+        return Number.isFinite(value) ? value : null
+    }
+
+    const normalized = (value ?? '').trim().replace(/\s/g, '').replace(',', '.')
+
+    if (normalized === '' || !/^-?\d*\.?\d+$/.test(normalized)) {
+        return null
+    }
+
+    return Number(normalized)
+}

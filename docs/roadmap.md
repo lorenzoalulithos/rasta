@@ -37,7 +37,7 @@ Prefisso: **A** = api, **F** = app (frontend), **M** = manuale (Lollo).
 - [ ] **F4.1** Shell: layout con bottom bar / sidebar, pagina login, `useApi()`, store auth con token persistente, guard sulle route. PWA manifest + service worker. Fatto quando: si installa su Android e dopo riapertura è ancora loggato.
 - [x] **F4.2** Tipi in `types/api.ts` da `api.md`. Composable `useQuotes`, `useCustomers`, `useCatalog`, `useStock` (solo fetch, niente logica).
 - [x] **F4.3** Lista preventivi + nuovo preventivo step 1 (cliente/cantiere con creazione inline). `flows.md §2.1–2.2`.
-- [ ] **F4.4** Dettaglio preventivo: righe, picker lavorazione con "+ Nuova lavorazione" e riga libera, footer con totali e costo/margine. `flows.md §2.3`.
+- [x] **F4.4** Dettaglio preventivo: righe, picker lavorazione con "+ Nuova lavorazione" e riga libera, footer con totali e costo/margine. `flows.md §2.3`.
 - [ ] **F4.5** Bottom sheet riga: quantità, mani, prezzo, materiali con calcolo live via `preview-calculate` (debounce 300 ms). `flows.md §2.4`.
 - [ ] **F4.6** Anteprima PDF, condivisione (Web Share API con fallback download), transizioni di stato e toast. `flows.md §2.5–2.7`.
 
