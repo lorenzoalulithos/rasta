@@ -42,6 +42,7 @@ final class MaterialController extends Controller
         $materials = Material::query()
                              ->with('stock')
                              ->withCommittedPackages()
+                             ->when(!$request->boolean('archived'), static fn (Builder $query) => $query->whereNull('archived_at'))
                              ->when('' !== $search, static function (Builder $query) use ($search): void {
                                  $query->where(static function (Builder $query) use ($search): void {
                                      $query->whereLike('name', "%{$search}%")
@@ -145,13 +146,14 @@ final class MaterialController extends Controller
     }
 
     /**
-     * 409 while the material is in quotes that are not closed (draft, sent, accepted).
+     * 409 while in quotes that are not closed; archived when only in closed quotes
+     * (200, out of the job suggestions); deleted when never used (204).
      *
      * @param Material $material
      *
-     * @return Response
+     * @return MaterialResource|Response
      */
-    public function destroy(Material $material): Response
+    public function destroy(Material $material): MaterialResource|Response
     {
         $inOpenQuotes = $material->quoteLineMaterials()
                                  ->whereHas('line.quote', static function (Builder $query): void {
@@ -161,11 +163,15 @@ final class MaterialController extends Controller
 
         abort_if($inOpenQuotes, Response::HTTP_CONFLICT, 'Il materiale è in preventivi aperti: non si può eliminare.');
 
-        abort_if(
-            $material->quoteLineMaterials()->exists(),
-            Response::HTTP_CONFLICT,
-            'Il materiale è nei preventivi chiusi: non si può eliminare.'
-        );
+        if ($material->quoteLineMaterials()->exists()) {
+            DB::transaction(static function () use ($material): void {
+                $material->jobMaterials()->delete();
+                // Not fillable: archiving goes only through here
+                $material->forceFill(['archived_at' => now()])->save();
+            });
+
+            return new MaterialResource(self::withStock($material));
+        }
 
         $material->delete();
 

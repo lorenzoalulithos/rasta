@@ -63,6 +63,10 @@ return new class extends Migration {
                 $table->text('notes')
                       ->nullable();
 
+                // Out of the catalog, still in the history of closed quotes
+                $table->dateTime('archived_at')
+                      ->nullable();
+
                 $table->timestamps();
 
                 $table->index(['tenant_id', 'category']);

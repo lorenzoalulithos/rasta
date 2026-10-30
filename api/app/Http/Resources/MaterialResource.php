@@ -40,6 +40,7 @@ final class MaterialResource extends JsonResource
             'supplier' => $this->supplier,
             'min_stock' => (float) $this->min_stock,
             'notes' => $this->notes,
+            'archived_at' => $this->archived_at,
             'stock' => $this->when(
                 $this->relationLoaded('stock'),
                 fn (): array => app(StockService::class)->figures(

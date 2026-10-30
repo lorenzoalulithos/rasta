@@ -123,6 +123,7 @@ final class Material extends Model
             'coverage_min' => 'decimal:2',
             'coverage_max' => 'decimal:2',
             'min_stock' => 'decimal:2',
+            'archived_at' => 'datetime',
         ];
     }
 }

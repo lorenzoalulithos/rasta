@@ -109,6 +109,7 @@ Tutto ciò che si compra: vernici, stucchi, consumabili, attrezzi.
 | supplier | string, null | fornitore, testo libero |
 | min_stock | decimal | scorta minima in confezioni, default 0 |
 | notes | text, null | |
+| archived_at | datetime, null | materiale archiviato: sparisce da catalogo, liste e suggerimenti, ma resta nello storico dei preventivi chiusi |
 
 `kind`:
 - `consumable_quantity`: vernici, stucchi, fissativi. Ha `coverage`, entra nel calcolatore e nel fabbisogno.
@@ -406,6 +407,6 @@ Secondari suggeriti per imbiancatura interna: Fissativo (coverage, apply_coats f
 - [ ] Confermare col socio il punto 7.3: proposta (c), costo IVA inclusa + cifra di confronto netta IVA
 - [ ] Confermare i 6 prezzi delle lavorazioni v1 e i materiali primari
 - [x] Rasatura: due lavorazioni (gesso / fibrato), come nel seed
-- [ ] Eliminare un materiale usato solo in preventivi chiusi (`api.md`: ammesso). Oggi il `QuoteLineMaterial` punta al materiale e ne prende il nome: o si archivia il materiale (`archived_at`, sparisce dal catalogo ma resta nello storico) o si copia il nome nello snapshot. Proposta: archiviare. Fino alla decisione: 409
+- [x] Eliminare un materiale usato solo in preventivi chiusi: si **archivia** (`archived_at`), sparisce dal catalogo e dai suggerimenti delle lavorazioni, resta nello storico
 - [ ] Righe complete del preventivo Belissi (totale 974,00 €: 724,00 € di imbiancatura + 250,00 € da definire) per il test di A2.3
 - [ ] `estimated_hours_per_unit`: lo popoliamo in v1 o no

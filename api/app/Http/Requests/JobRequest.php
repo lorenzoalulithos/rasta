@@ -46,7 +46,7 @@ final class JobRequest extends FormRequest
                 'required',
                 'uuid',
                 'distinct',
-                Rule::exists('materials', 'id')->where('tenant_id', TenantScope::currentTenantId()),
+                Rule::exists('materials', 'id')->where('tenant_id', TenantScope::currentTenantId())->whereNull('archived_at'),
             ],
             'materials.*.role' => ['required', Rule::enum(JobMaterialRole::class)],
             'materials.*.consumption_mode' => ['required', Rule::enum(ConsumptionMode::class)],

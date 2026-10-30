@@ -2,6 +2,8 @@
 
 use App\Enums\QuoteStatus;
 use App\Enums\StockMovementType;
+use App\Models\Database\v1\Job;
+use App\Models\Database\v1\JobMaterial;
 use App\Models\Database\v1\Material;
 use App\Models\Database\v1\Stock;
 use App\Models\Database\v1\StockMovement;
@@ -25,6 +27,9 @@ const STOCK_AVAILABLE = -0.5;
 
 // Tempera Wallcream coverage 8/10 mq/lt
 const WALLCREAM_COVERAGE_MIN = 8;
+
+// Draft-only material + archived one
+const OWN_MATERIALS_WITH_ARCHIVED = 2;
 
 it('lists the 72 seed materials with an empty stock', function (): void {
     signInTenant();
@@ -118,11 +123,13 @@ it('updates a material partially', function (): void {
         ->assertJsonPath('data.name', 'Tempera Wallcream');
 });
 
-it('deletes a material only when no quote uses it', function (): void {
+it('deletes, archives or refuses a material depending on its quotes', function (): void {
     $tenant = signInTenant();
     $free = Material::factory()->for($tenant)->create();
     $inDraft = Material::factory()->for($tenant)->create();
-    $inClosed = Material::factory()->for($tenant)->create();
+    $inClosed = Material::factory()->for($tenant)->create(['name' => 'Smalto vecchio']);
+    $job = Job::factory()->for($tenant)->create();
+    JobMaterial::factory()->for($tenant)->for($job)->for($inClosed)->create();
     quoteUsing($tenant, $inDraft, QuoteStatus::Draft);
     quoteUsing($tenant, $inClosed, QuoteStatus::Completed);
 
@@ -131,8 +138,26 @@ it('deletes a material only when no quote uses it', function (): void {
         ->assertStatus(Response::HTTP_CONFLICT)
         ->assertJsonPath('message', 'Il materiale è in preventivi aperti: non si può eliminare.');
     deleteJson("/api/materials/{$inClosed->id}")
-        ->assertStatus(Response::HTTP_CONFLICT)
-        ->assertJsonPath('message', 'Il materiale è nei preventivi chiusi: non si può eliminare.');
+        ->assertStatus(Response::HTTP_OK)
+        ->assertJsonPath('data.name', 'Smalto vecchio');
+
+    expect($inClosed->refresh()->archived_at)->not->toBeNull()
+        ->and($job->jobMaterials()->count())->toBe(0);
+
+    getJson('/api/materials')->assertJsonPath('meta.total', 1);
+    getJson('/api/materials?archived=1')->assertJsonPath('meta.total', OWN_MATERIALS_WITH_ARCHIVED);
+});
+
+it('refuses archived materials as job suggestions', function (): void {
+    $tenant = signInTenant();
+    $archived = Material::factory()->for($tenant)->create(['archived_at' => now()]);
+
+    postJson('/api/jobs', [
+        'name' => 'Ringhiere',
+        'unit' => 'sqm',
+        'unit_price' => 10,
+        'materials' => [['material_id' => $archived->id, 'role' => 'primary', 'consumption_mode' => 'coverage']],
+    ])->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['materials.0.material_id']);
 });
 
 it('hides materials of other tenants', function (): void {
