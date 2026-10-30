@@ -44,6 +44,8 @@ app-artigiani/
 - **i18n**: no. UI in italiano hardcoded. I nomi di campo nel codice restano in inglese.
 - **Test**: Vitest solo per composable e utility di calcolo (se si replica il calcolatore client-side per l'anteprima live). Niente e2e in v1.
 - **Lint**: `@nuxt/eslint`, config di default.
+- **Typecheck**: `npm run typecheck` (`nuxi typecheck` con `vue-tsc`), anche in CI.
+- **Chiamate**: un composable per area (`useQuotes`, `useCustomers`, `useCatalog`, `useStock`) che espone solo funzioni di fetch tipizzate su `types/api.ts`; stato e logica stanno nelle pagine o negli store.
 
 ## Brand
 
@@ -73,7 +75,7 @@ Nome **duemani** (marchio e domini ancora da verificare), direzione B "cantiere"
 
 GitHub Actions (`.github/workflows/`), su PR e push su `main`:
 
-- `tests.yml`: job `api` (Pest su PHP 8.5 + MySQL 8, in `api/`) e job `app` (lint + `nuxt generate` su Node da `app/.nvmrc`, in `app/`).
+- `tests.yml`: job `api` (Pest su PHP 8.5 + MySQL 8, in `api/`) e job `app` (lint + `nuxi typecheck` + `nuxt generate` su Node da `app/.nvmrc`, in `app/`).
 - `style-checks.yml`: `composer test-style`.
 - `security-checks.yml`: `composer audit` e `npm audit --audit-level=high`.
 
