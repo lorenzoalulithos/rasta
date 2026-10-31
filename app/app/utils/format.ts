@@ -32,3 +32,10 @@ export function parseNumber(value: string | number | null | undefined): number |
 
     return Number(normalized)
 }
+
+const moneyInput = new Intl.NumberFormat('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: false })
+
+/** Prezzo da mettere in un campo: "4,00", senza simbolo né separatore delle migliaia. */
+export function formatMoneyInput(value: number): string {
+    return moneyInput.format(value)
+}

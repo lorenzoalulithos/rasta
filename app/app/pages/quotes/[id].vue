@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from '@nuxt/ui'
-import type { Quote, QuoteLine } from '~/types/api'
+import type { Job, Quote, QuoteLine } from '~/types/api'
 
 // Dettaglio preventivo, step 2: righe e totali (docs/flows.md §2.3)
 const route = useRoute()
@@ -11,6 +11,9 @@ const id = computed(() => String(route.params.id))
 const quote = ref<Quote | null>(null)
 const failed = ref(false)
 const pickerOpen = ref(false)
+const lineOpen = ref(false)
+const editingLine = ref<QuoteLine | null>(null)
+const newJob = ref<Job | null>(null)
 const notesOpen = ref(false)
 const deleteOpen = ref(false)
 const busy = ref(false)
@@ -33,9 +36,20 @@ async function load(): Promise<void> {
 
 onMounted(load)
 
-async function lineAdded(): Promise<void> {
+async function lineSaved(message: string): Promise<void> {
     await load()
-    toast.add({ title: 'Lavoro aggiunto', color: 'success', icon: 'i-lucide-check' })
+    toast.add({ title: message, color: 'success', icon: 'i-lucide-check' })
+}
+
+// Il picker si chiude e si apre la riga (§2.4): un attimo di pausa per non sovrapporre i due pannelli
+const SHEET_SWAP_MS = 250
+
+function chooseJob(job: Job | null): void {
+    editingLine.value = null
+    newJob.value = job
+    setTimeout(() => {
+        lineOpen.value = true
+    }, SHEET_SWAP_MS)
 }
 
 async function removeLine(line: QuoteLine): Promise<void> {
@@ -53,8 +67,14 @@ async function removeLine(line: QuoteLine): Promise<void> {
     }
 }
 
-function openLine(): void {
-    // La modifica della riga (bottom sheet con quantità, prezzo e materiali) è F4.5
+function openLine(line: QuoteLine): void {
+    if (!editable.value) {
+        return
+    }
+
+    editingLine.value = line
+    newJob.value = null
+    lineOpen.value = true
 }
 
 // ── Menu ⋯: note private, duplica, elimina ──
@@ -223,7 +243,7 @@ const menu = computed<DropdownMenuItem[][]>(() => [
                         :key="line.id ?? line.sort_order"
                         :line="line"
                         :editable="editable"
-                        @open="openLine"
+                        @open="openLine(line)"
                         @remove="removeLine(line)"
                     />
                     <p
@@ -308,8 +328,15 @@ const menu = computed<DropdownMenuItem[][]>(() => [
         <JobPickerSheet
             v-if="quote"
             v-model:open="pickerOpen"
+            @choose="chooseJob"
+        />
+        <LineSheet
+            v-if="quote"
+            v-model:open="lineOpen"
             :quote-id="quote.id"
-            @added="lineAdded"
+            :line="editingLine"
+            :job="newJob"
+            @saved="lineSaved"
         />
 
         <UModal

@@ -38,7 +38,7 @@ Prefisso: **A** = api, **F** = app (frontend), **M** = manuale (Lollo).
 - [x] **F4.2** Tipi in `types/api.ts` da `api.md`. Composable `useQuotes`, `useCustomers`, `useCatalog`, `useStock` (solo fetch, niente logica).
 - [x] **F4.3** Lista preventivi + nuovo preventivo step 1 (cliente/cantiere con creazione inline). `flows.md §2.1–2.2`.
 - [x] **F4.4** Dettaglio preventivo: righe, picker lavorazione con "+ Nuova lavorazione" e riga libera, footer con totali e costo/margine. `flows.md §2.3`.
-- [ ] **F4.5** Bottom sheet riga: quantità, mani, prezzo, materiali con calcolo live via `preview-calculate` (debounce 300 ms). `flows.md §2.4`.
+- [x] **F4.5** Bottom sheet riga: quantità, mani, prezzo, materiali con calcolo live via `preview-calculate` (debounce 300 ms). `flows.md §2.4`.
 - [ ] **F4.6** Anteprima PDF, condivisione (Web Share API con fallback download), transizioni di stato e toast. `flows.md §2.5–2.7`.
 
 **Checkpoint:** qui il socio può fare un preventivo vero dal telefono. Prima demo, prima raccolta di feedback. Fermarsi e correggere prima di continuare.
