@@ -67,6 +67,11 @@ async function removeLine(line: QuoteLine): Promise<void> {
     }
 }
 
+// Dopo una transizione: il nuovo stato con le righe già caricate
+function statusChanged(updated: Quote): void {
+    quote.value = { ...updated, lines: updated.lines ?? quote.value?.lines }
+}
+
 function openLine(line: QuoteLine): void {
     if (!editable.value) {
         return
@@ -148,7 +153,7 @@ const menu = computed<DropdownMenuItem[][]>(() => [
 </script>
 
 <template>
-    <section class="flex flex-col gap-5 pb-36 lg:pb-0">
+    <section class="flex flex-col gap-5 pb-64 lg:pb-0">
         <UButton
             to="/quotes"
             label="Preventivi"
@@ -176,7 +181,7 @@ const menu = computed<DropdownMenuItem[][]>(() => [
 
         <div
             v-else
-            class="grid gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(18rem,2fr)] lg:items-start lg:gap-8"
+            class="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,3fr)_minmax(18rem,2fr)] lg:items-start lg:gap-8"
         >
             <!-- Colonna righe -->
             <div class="flex min-w-0 flex-col gap-4">
@@ -293,6 +298,12 @@ const menu = computed<DropdownMenuItem[][]>(() => [
                         :totals="quote"
                         variant="panel"
                     />
+                    <QuoteActions
+                        :quote="quote"
+                        :has-lines="lines.length > 0"
+                        variant="panel"
+                        @changed="statusChanged"
+                    />
                 </div>
                 <div class="flex flex-col gap-3 rounded-3xl bg-white p-6">
                     <div class="flex items-center justify-between">
@@ -322,6 +333,13 @@ const menu = computed<DropdownMenuItem[][]>(() => [
             <QuoteTotals
                 :totals="quote"
                 variant="bar"
+            />
+            <QuoteActions
+                class="mt-2"
+                :quote="quote"
+                :has-lines="lines.length > 0"
+                variant="bar"
+                @changed="statusChanged"
             />
         </div>
 

@@ -26,8 +26,13 @@ export function useQuotes() {
         preview: (id: string, lines: PreviewLineInput[]) => api<PreviewResponse>(`/quotes/${id}/preview-calculate`, { method: 'POST', body: { lines } }),
 
         transition: (id: string, to: TransitionTarget) => api<TransitionResponse>(`/quotes/${id}/transition`, { method: 'POST', body: { to } }),
-        /** Il PDF come Blob: serve il Bearer, quindi niente link diretto. */
-        pdf: (id: string) => api(`/quotes/${id}/pdf`, { responseType: 'blob', headers: { Accept: 'application/pdf' } }) as Promise<Blob>,
+        /** Il PDF come Blob con il nome del file dall'header: serve il Bearer, quindi niente link diretto. */
+        pdf: async (id: string): Promise<{ blob: Blob, filename: string }> => {
+            const response = await api.raw(`/quotes/${id}/pdf`, { responseType: 'blob', headers: { Accept: 'application/pdf' } })
+            const filename = /filename="([^"]+)"/.exec(response.headers.get('Content-Disposition') ?? '')?.[1] ?? 'Preventivo.pdf'
+
+            return { blob: response._data as Blob, filename }
+        },
 
         completion: (id: string) => api<Item<CompletionItem[]>>(`/quotes/${id}/completion`),
         complete: (id: string, consumptions: Consumption[]) => api<CompleteResponse>(`/quotes/${id}/complete`, { method: 'POST', body: { consumptions } }),
