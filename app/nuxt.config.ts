@@ -1,4 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+// Sottocartella in cui gira l'app: "/" in locale, "/rasta/" su GitHub Pages (docs/stack.md "Ambiente di prova").
+// Nuxt la legge da NUXT_APP_BASE_URL; qui serve anche alla PWA
+const baseURL = process.env.NUXT_APP_BASE_URL ?? '/'
+
 export default defineNuxtConfig({
     compatibilityDate: '2026-10-29',
 
@@ -15,6 +20,7 @@ export default defineNuxtConfig({
     css: ['~/assets/css/main.css'],
 
     app: {
+        baseURL,
         head: {
             htmlAttrs: { lang: 'it' },
             title: 'duemani',
@@ -59,14 +65,15 @@ export default defineNuxtConfig({
             short_name: 'duemani',
             description: 'Preventivi e magazzino per chi lavora con le mani',
             lang: 'it',
-            start_url: '/',
+            start_url: baseURL,
+            scope: baseURL,
             display: 'standalone',
             orientation: 'portrait',
             theme_color: '#17181C',
             background_color: '#EFEEEA',
         },
         workbox: {
-            navigateFallback: '/',
+            navigateFallback: baseURL,
             globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
             runtimeCaching: [
                 {

@@ -1,0 +1,69 @@
+name: Deploy app
+# PWA su GitHub Pages (docs/stack.md "Ambiente di prova"), solo dopo che "Tests" è verde su main
+on:
+  workflow_run:
+    workflows: [ Tests ]
+    types: [ completed ]
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: deploy-app
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # Solo push su main di questo repo (mai PR da fork, che vedrebbero i secrets).
+    # Spento finché la variabile del repo DEPLOY_APP non è 'true' (docs/deploy.md)
+    if: ${{ vars.DEPLOY_APP == 'true' && (github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_repository.full_name == github.repository)) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: app/.nvmrc
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install node dependencies
+        run: npm ci
+
+      - name: Build static app
+        run: npm run generate
+        env:
+          NUXT_APP_BASE_URL: /rasta/
+          NUXT_PUBLIC_API_BASE: https://duemani.duckdns.org/api
+
+      # Pages non conosce le route della SPA: ogni indirizzo sconosciuto riapre l'app
+      - name: SPA fallback
+        run: cp .output/public/200.html .output/public/404.html
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: app/.output/public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

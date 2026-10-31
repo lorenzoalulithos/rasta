@@ -79,6 +79,15 @@ GitHub Actions (`.github/workflows/`), su PR e push su `main`:
 - `style-checks.yml`: `composer test-style`.
 - `security-checks.yml`: `composer audit` e `npm audit --audit-level=high`.
 
+## Ambiente di prova (demo al socio, gratis)
+
+Deciso il 31/10/2026 per il checkpoint della Fase 4: tutto a costo zero. Passi in `docs/deploy.md`.
+
+- **App**: GitHub Pages del repo pubblico, `https://lorenzoalulithos.github.io/rasta/`. Nuxt con `NUXT_APP_BASE_URL=/rasta/`; `404.html` = copia di `200.html` perché Pages non conosce le route della SPA.
+- **API**: Oracle Cloud Always Free, una VM Ubuntu 24.04 ARM (Ampere A1) con Caddy (HTTPS automatico Let's Encrypt), PHP 8.5-FPM e MySQL 8 sulla stessa macchina. Dominio gratuito `https://duemani.duckdns.org` (DuckDNS → IP pubblico riservato della VM).
+- **Deploy**: GitHub Actions dopo che `Tests` è verde su `main` (`deploy-app.yml` → Pages, `deploy-api.yml` → SSH sulla VM ed esegue `deploy/oracle/deploy.sh`). Segreti solo nei secrets del repo e nel `.env` sulla VM, mai nel codice.
+- Nessun seeder di prova in produzione: utente con `php artisan app:create-tenant`, catalogo con `PainterCatalogSeeder`.
+
 ## Produzione (quando serve, non ora)
 
-VPS Hetzner o Laravel Forge per l'API; Nuxt statico su Netlify/Cloudflare Pages o servito dallo stesso nginx. HTTPS obbligatorio (PWA). Backup DB giornaliero. Si decide alla fine della v1.
+Si decide alla fine della v1 (VPS Hetzner/Forge o si resta su Oracle). HTTPS obbligatorio (PWA). Backup DB giornaliero.

@@ -1,0 +1,42 @@
+name: Deploy API
+# API sulla VM Oracle via SSH (docs/stack.md "Ambiente di prova"), solo dopo che "Tests" è verde su main.
+# Secrets del repo: ORACLE_HOST (IP o duemani.duckdns.org), ORACLE_SSH_KEY (chiave privata), ORACLE_KNOWN_HOSTS (riga di ssh-keyscan)
+on:
+  workflow_run:
+    workflows: [ Tests ]
+    types: [ completed ]
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-api
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Solo push su main di questo repo (mai PR da fork, che vedrebbero i secrets).
+    # Spento finché la variabile del repo DEPLOY_API non è 'true' (docs/deploy.md)
+    if: ${{ vars.DEPLOY_API == 'true' && (github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_repository.full_name == github.repository)) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: SSH key
+        env:
+          SSH_KEY: ${{ secrets.ORACLE_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.ORACLE_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Deploy
+        env:
+          HOST: ${{ secrets.ORACLE_HOST }}
+        run: ssh -i ~/.ssh/id_deploy -o BatchMode=yes "ubuntu@$HOST" 'bash /srv/duemani/deploy/oracle/deploy.sh'
+
+      - name: Smoke test
+        run: curl -fsS https://duemani.duckdns.org/api/ping
